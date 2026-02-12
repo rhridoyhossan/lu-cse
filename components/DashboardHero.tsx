@@ -130,7 +130,7 @@ export default function DashboardHero({
         </div>
 
         <div className="flex gap-4">
-          {/* Live Weather */}
+          {/* Time Widget */}
           <div className="head-element opacity-0 bg-slate-950/80 border border-slate-800 rounded-xl p-4 min-w-35 flex flex-col items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.05)]">
             <div className="text-2xl font-bold text-cyan-400 tracking-wider tabular-nums">
               {timeStr}
@@ -141,12 +141,12 @@ export default function DashboardHero({
             </div>
           </div>
 
-          {/* Time Widget */}
+          {/* Live Weather */}
           <div className="head-element opacity-0 bg-slate-950/80 border border-slate-800 rounded-xl p-4 min-w-25 flex flex-col items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.05)]">
             <div className="flex items-center gap-2">
               {weather ? (
                 <span className="text-2xl font-bold text-white tabular-nums">
-                  {weather.temp}°
+                  {weather.temp}°C
                 </span>
               ) : (
                 <span className="text-2xl font-bold text-slate-600 animate-pulse">
