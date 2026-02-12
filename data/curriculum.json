@@ -1,0 +1,758 @@
+[
+  {
+    "semester": "Y1 T1",
+    "course_code": "CSE-1101",
+    "title": "Introduction to Computing",
+    "description": "Foundational course covering computer systems, hardware components, software applications, and basic computing concepts. Students learn about operating systems, file management, and essential productivity tools. Prepares learners for advanced computing coursework through practical exposure to technology fundamentals.",
+    "credits": 2,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y1 T1",
+    "course_code": "CSE-1102",
+    "title": "Introduction to Computing Sessional",
+    "description": "Hands-on laboratory course complementing theoretical computing concepts with practical exercises. Students gain experience using computer applications, internet tools, and basic troubleshooting techniques. Develops essential digital literacy skills through guided practical sessions.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y1 T1",
+    "course_code": "CSE-1151",
+    "title": "Discrete Mathematics",
+    "description": "Comprehensive study of mathematical structures fundamental to computer science including logic, set theory, relations, and graph theory. Covers combinatorics, Boolean algebra, and proof techniques essential for algorithm analysis. Provides mathematical foundation for programming and computational problem-solving.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": [
+      "Discrete Mathematics and Its Applications — Kenneth H. Rosen"
+    ]
+  },
+  {
+    "semester": "Y1 T1",
+    "course_code": "MAT-1151",
+    "title": "Calculus",
+    "description": "Rigorous treatment of differential and integral calculus with applications in engineering and science. Covers limits, derivatives, integration techniques, and their practical implementations. Develops analytical thinking and mathematical reasoning skills essential for technical disciplines.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": ["Calculus — James Stewart"]
+  },
+  {
+    "semester": "Y1 T1",
+    "course_code": "GED-1131",
+    "title": "Basic English",
+    "description": "Foundational English language course focusing on grammar, vocabulary, reading comprehension, and basic writing skills. Develops communication abilities necessary for academic and professional contexts. Enhances language proficiency through structured exercises and practical applications.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y1 T2",
+    "course_code": "CSE-1211",
+    "title": "Structured Programming",
+    "description": "Introduction to programming fundamentals using structured approach with emphasis on problem-solving methodologies. Covers control structures, functions, arrays, and basic data types in a programming language. Develops logical thinking and code organization skills for software development.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": [
+      "The C Programming Language — Brian W. Kernighan and Dennis M. Ritchie"
+    ]
+  },
+  {
+    "semester": "Y1 T2",
+    "course_code": "CSE-1212",
+    "title": "Structured Programming Sessional",
+    "description": "Practical laboratory course reinforcing structured programming concepts through coding exercises and projects. Students implement algorithms, debug programs, and develop small applications under guidance. Builds programming proficiency through hands-on practice and code review sessions.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y1 T2",
+    "course_code": "MAT-1251",
+    "title": "Linear Algebra and Complex Variable",
+    "description": "Advanced mathematics course covering matrix operations, vector spaces, eigenvalues, and complex number theory. Explores linear transformations, systems of equations, and complex analysis fundamentals. Essential mathematical toolkit for engineering computations and theoretical computer science.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": ["Linear Algebra and Its Applications — Gilbert Strang"]
+  },
+  {
+    "semester": "Y1 T2",
+    "course_code": "CHE-1161",
+    "title": "Chemistry",
+    "description": "Fundamental chemistry course covering atomic structure, chemical bonding, thermodynamics, and reaction mechanisms. Introduces organic and inorganic chemistry principles relevant to engineering applications. Develops understanding of material properties and chemical processes in technological systems.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y1 T2",
+    "course_code": "GED-1231",
+    "title": "Functional English",
+    "description": "Advanced English course focusing on professional communication, technical writing, and presentation skills. Enhances ability to express complex ideas clearly in written and spoken formats. Prepares students for academic research and workplace communication requirements.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y1 T3",
+    "course_code": "GED-1262",
+    "title": "Computer Aided Engineering Drawing",
+    "description": "Practical course on creating technical drawings using computer-aided design software. Covers engineering graphics standards, 2D drafting, and basic 3D modeling techniques. Develops visualization skills essential for engineering design and documentation.",
+    "credits": 1,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y1 T3",
+    "course_code": "PHY-1171",
+    "title": "Physics",
+    "description": "Comprehensive physics course covering mechanics, electromagnetism, optics, and modern physics concepts. Applies mathematical tools to understand physical phenomena and engineering principles. Establishes scientific foundation for understanding hardware and computational systems.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y1 T3",
+    "course_code": "PHY-1272",
+    "title": "Physics Sessional",
+    "description": "Laboratory course providing hands-on experience with physics experiments and measurement techniques. Students conduct experiments to verify theoretical concepts and develop data analysis skills. Reinforces understanding of physical principles through practical observation.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y1 T3",
+    "course_code": "CSE-2111",
+    "title": "Data Structures",
+    "description": "Core computer science course covering fundamental data structures including arrays, linked lists, stacks, queues, trees, and graphs. Emphasizes algorithm efficiency analysis and appropriate structure selection for problem-solving. Essential foundation for efficient software development and algorithm design.",
+    "credits": 3,
+    "prerequisites": ["CSE-1211"],
+    "resources": [
+      "Introduction to Algorithms — Thomas H. Cormen",
+      "Data Structures and Algorithm Analysis in C++ — Mark Allen Weiss"
+    ]
+  },
+  {
+    "semester": "Y1 T3",
+    "course_code": "CSE-2112",
+    "title": "Data Structures Sessional",
+    "description": "Practical implementation course where students code various data structures and algorithms. Focuses on memory management, pointer manipulation, and performance optimization techniques. Builds programming maturity through complex implementation projects.",
+    "credits": 1.5,
+    "prerequisites": ["CSE-1212"],
+    "resources": []
+  },
+  {
+    "semester": "Y1 T3",
+    "course_code": "GED-1145",
+    "title": "Bangladesh Studies",
+    "description": "Comprehensive overview of Bangladesh history, culture, society, and economic development. Covers geographical features, political evolution, and contemporary social issues. Develops national awareness and civic responsibility among students.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T1",
+    "course_code": "EEE-1221",
+    "title": "Electrical Circuits",
+    "description": "Fundamental electrical engineering course covering circuit analysis, Ohm's law, Kirchhoff's laws, and network theorems. Studies AC and DC circuits, resonance, and transient analysis. Provides essential knowledge for understanding computer hardware and digital systems.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T1",
+    "course_code": "EEE-1222",
+    "title": "Electrical Circuits Sessional",
+    "description": "Laboratory course for practical circuit construction, measurement, and analysis using electronic instruments. Students build and test circuits to verify theoretical principles and develop troubleshooting skills. Reinforces circuit theory through hands-on experimentation.",
+    "credits": 1,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T1",
+    "course_code": "CSE-2211",
+    "title": "Computer Algorithms and Complexity",
+    "description": "Advanced study of algorithm design techniques including divide-and-conquer, dynamic programming, and greedy algorithms. Covers complexity analysis, NP-completeness, and problem classification. Develops ability to design efficient solutions for computational problems.",
+    "credits": 3,
+    "prerequisites": ["CSE-2111"],
+    "resources": [
+      "Introduction to Algorithms — Thomas H. Cormen",
+      "Algorithm Design — Jon Kleinberg and Éva Tardos"
+    ]
+  },
+  {
+    "semester": "Y2 T1",
+    "course_code": "CSE-2212",
+    "title": "Computer Algorithms and Complexity Sessional",
+    "description": "Implementation-focused course where students code and analyze various algorithms. Emphasizes performance measurement, optimization strategies, and algorithm comparison techniques. Builds practical skills for solving complex computational problems efficiently.",
+    "credits": 1.5,
+    "prerequisites": ["CSE-2112"],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T1",
+    "course_code": "MAT-2151",
+    "title": "Differential Equation, Laplace Transform and Fourier Analysis",
+    "description": "Advanced mathematics course covering ordinary differential equations, Laplace transforms, and Fourier series. Applies mathematical techniques to solve engineering problems and analyze systems. Essential for signal processing and control systems understanding.",
+    "credits": 3,
+    "prerequisites": ["MAT-1151"],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T1",
+    "course_code": "GED-1291",
+    "title": "Introduction to Sociology",
+    "description": "Foundational sociology course examining social structures, institutions, and human behavior in groups. Covers culture, socialization, stratification, and social change theories. Develops understanding of societal dynamics and their impact on technology adoption.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T2",
+    "course_code": "EEE-2121",
+    "title": "Electronic Devices and Circuits",
+    "description": "Study of semiconductor devices including diodes, transistors, and operational amplifiers. Covers amplifier design, power supplies, and analog circuit analysis. Provides foundation for understanding digital electronics and computer hardware components.",
+    "credits": 3,
+    "prerequisites": ["EEE-1221"],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T2",
+    "course_code": "EEE-2122",
+    "title": "Electronic Devices and Circuits Sessional",
+    "description": "Practical laboratory work involving electronic device characterization and circuit implementation. Students build and test analog circuits using discrete components and ICs. Develops skills in electronic instrumentation and circuit troubleshooting.",
+    "credits": 1,
+    "prerequisites": ["EEE-1222"],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T2",
+    "course_code": "CSE-2101",
+    "title": "Theory of Computation",
+    "description": "Theoretical foundation of computer science covering automata, formal languages, and computability. Explores finite automata, context-free grammars, Turing machines, and complexity classes. Essential for understanding the limits and capabilities of computation.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": ["Introduction to the Theory of Computation — Michael Sipser"]
+  },
+  {
+    "semester": "Y2 T2",
+    "course_code": "MAT-2251",
+    "title": "Coordinate Geometry & Vector Analysis",
+    "description": "Mathematical course covering analytical geometry in multiple dimensions and vector calculus. Studies coordinate transformations, vector fields, and geometric applications. Provides mathematical tools for graphics and computational geometry.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T2",
+    "course_code": "GED-1261",
+    "title": "Sustainable Development",
+    "description": "Interdisciplinary course examining environmental, social, and economic aspects of sustainable development. Covers climate change, resource management, and sustainable technology practices. Develops awareness of engineering's role in creating sustainable solutions.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T3",
+    "course_code": "CSE-2221",
+    "title": "Digital Logic Design",
+    "description": "Fundamental course on digital systems covering Boolean algebra, logic gates, and combinational circuits. Studies sequential circuits, flip-flops, and digital design methodologies. Foundation for understanding computer architecture and hardware design.",
+    "credits": 3,
+    "prerequisites": ["EEE-2121"],
+    "resources": ["Digital Design — M. Morris Mano"]
+  },
+  {
+    "semester": "Y2 T3",
+    "course_code": "CSE-2222",
+    "title": "Digital Logic Design Sessional",
+    "description": "Practical implementation of digital circuits using simulation tools and hardware kits. Students design, build, and test combinational and sequential logic circuits. Develops skills in digital system design and troubleshooting.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T3",
+    "course_code": "CSE-3111",
+    "title": "Object Oriented Programming",
+    "description": "Comprehensive study of OOP principles including encapsulation, inheritance, polymorphism, and abstraction. Covers class design, object relationships, and design patterns implementation. Develops skills for building modular and maintainable software systems.",
+    "credits": 3,
+    "prerequisites": ["CSE-2211"],
+    "resources": [
+      "Effective Java — Joshua Bloch",
+      "Design Patterns: Elements of Reusable Object-Oriented Software — Erich Gamma"
+    ]
+  },
+  {
+    "semester": "Y2 T3",
+    "course_code": "CSE-3112",
+    "title": "Object Oriented Programming Sessional",
+    "description": "Hands-on programming course implementing OOP concepts in practical software projects. Students design class hierarchies, implement design patterns, and develop applications. Builds expertise in object-oriented software development practices.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T3",
+    "course_code": "GED-2181",
+    "title": "Introduction to Economics",
+    "description": "Fundamental economics course covering microeconomics and macroeconomics principles. Studies supply-demand, market structures, national income, and economic policies. Provides economic literacy for understanding technology markets and business decisions.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y2 T3",
+    "course_code": "GED-4251",
+    "title": "Professional Practices and Ethics",
+    "description": "Course on professional responsibilities, ethical decision-making, and engineering standards. Covers workplace communication, teamwork, and legal aspects of computing profession. Prepares students for ethical challenges in technology careers.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T1",
+    "course_code": "CSE-2231",
+    "title": "Data Communications",
+    "description": "Study of data transmission principles including signaling, encoding, modulation, and transmission media. Covers communication models, error detection, and network fundamentals. Foundation for understanding computer networks and telecommunications.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T1",
+    "course_code": "CSE-3121",
+    "title": "Computer Architecture and Design",
+    "description": "Comprehensive study of computer organization including processor design, memory hierarchy, and instruction sets. Covers pipelining, cache management, and performance optimization techniques. Essential for understanding how hardware executes software.",
+    "credits": 3,
+    "prerequisites": ["EEE-2121"],
+    "resources": [
+      "Computer Organization and Design — David A. Patterson and John L. Hennessy"
+    ]
+  },
+  {
+    "semester": "Y3 T1",
+    "course_code": "CSE-3115",
+    "title": "Compiler Design and Construction",
+    "description": "Study of compiler structure including lexical analysis, parsing, semantic analysis, and code generation. Covers optimization techniques and symbol table management. Develops understanding of programming language implementation.",
+    "credits": 3,
+    "prerequisites": ["CSE-2101"],
+    "resources": [
+      "Compilers: Principles, Techniques, and Tools — Alfred V. Aho"
+    ]
+  },
+  {
+    "semester": "Y3 T1",
+    "course_code": "CSE-3116",
+    "title": "Compiler Design and Construction Sessional",
+    "description": "Practical implementation of compiler components using programming tools and techniques. Students build lexical analyzers, parsers, and code generators for simple languages. Reinforces theoretical concepts through hands-on compiler construction.",
+    "credits": 1,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T1",
+    "course_code": "MAT-3151",
+    "title": "Statistics and Probability",
+    "description": "Mathematical course covering probability theory, statistical distributions, and data analysis methods. Studies hypothesis testing, regression, and sampling techniques. Essential for machine learning, data science, and experimental design.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": [
+      "Probability and Statistics for Engineers and Scientists — Ronald E. Walpole"
+    ]
+  },
+  {
+    "semester": "Y3 T2",
+    "course_code": "CSE-3113",
+    "title": "Database Management System",
+    "description": "Comprehensive study of database concepts including relational model, SQL, normalization, and transaction management. Covers database design, indexing, and query optimization techniques. Essential for developing data-driven applications.",
+    "credits": 3,
+    "prerequisites": ["CSE-2111"],
+    "resources": ["Database System Concepts — Abraham Silberschatz"]
+  },
+  {
+    "semester": "Y3 T2",
+    "course_code": "CSE-3114",
+    "title": "Database Management System Sessional",
+    "description": "Practical database implementation course using SQL and database management tools. Students design schemas, write queries, and develop database applications. Builds skills in data modeling and database administration.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T2",
+    "course_code": "CSE-3231",
+    "title": "Computer Networks",
+    "description": "Study of network architectures, protocols, and communication standards including OSI and TCP/IP models. Covers routing, switching, and network security fundamentals. Prepares students for network administration and distributed systems development.",
+    "credits": 3,
+    "prerequisites": ["CSE-2231"],
+    "resources": [
+      "Computer Networks — Andrew S. Tanenbaum",
+      "Computer Networking: A Top-Down Approach — James F. Kurose"
+    ]
+  },
+  {
+    "semester": "Y3 T2",
+    "course_code": "CSE-3232",
+    "title": "Computer Networks Sessional",
+    "description": "Hands-on network configuration and troubleshooting using simulation tools and real equipment. Students set up networks, configure protocols, and analyze network traffic. Develops practical networking skills for IT infrastructure management.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T2",
+    "course_code": "GED-1291",
+    "title": "Principles of Accounting",
+    "description": "Introduction to financial accounting concepts including bookkeeping, financial statements, and cost analysis. Covers accounting principles, budgeting, and business performance evaluation. Provides financial literacy for technology entrepreneurship.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T2",
+    "course_code": "CSE-3212",
+    "title": "Smartphone Application Development",
+    "description": "Practical course on developing mobile applications for smartphone platforms using modern frameworks. Covers UI design, data persistence, and platform-specific development practices. Prepares students for mobile software development careers.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T3",
+    "course_code": "CSE-3213",
+    "title": "Software Engineering",
+    "description": "Comprehensive study of software development lifecycle including requirements, design, testing, and maintenance. Covers development methodologies, project management, and quality assurance practices. Essential for professional software development.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": ["Software Engineering — Ian Sommerville"]
+  },
+  {
+    "semester": "Y3 T3",
+    "course_code": "CSE-3214",
+    "title": "Software Engineering Sessional",
+    "description": "Team-based software project development applying engineering principles and industry practices. Students work through complete development lifecycle from requirements to deployment. Builds collaborative skills and project management experience.",
+    "credits": 1,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T3",
+    "course_code": "CSE-3240",
+    "title": "Project I",
+    "description": "Individual or small-group project requiring application of learned concepts to solve real problems. Students complete design, implementation, and documentation of a software system. Develops independent problem-solving and technical communication skills.",
+    "credits": 3,
+    "prerequisites": ["CSE-3111"],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T3",
+    "course_code": "GED-3213",
+    "title": "Research Methodology",
+    "description": "Course on systematic research approaches including literature review, data collection, and analysis methods. Covers academic writing, citation standards, and research ethics. Prepares students for thesis work and academic research.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T3",
+    "course_code": "CSE-3215",
+    "title": "Numerical Methods",
+    "description": "Study of computational techniques for solving mathematical problems including equation solving and interpolation. Covers numerical integration, differential equations, and error analysis. Essential for scientific computing and simulations.",
+    "credits": 3,
+    "prerequisites": ["CSE-1211"],
+    "resources": []
+  },
+  {
+    "semester": "Y3 T3",
+    "course_code": "CSE-3216",
+    "title": "Numerical Methods Sessional",
+    "description": "Implementation of numerical algorithms using programming languages for solving mathematical problems. Students code and test numerical methods, analyzing accuracy and convergence. Reinforces theoretical knowledge through computational experiments.",
+    "credits": 1,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T1",
+    "course_code": "CSE-4101",
+    "title": "Microprocessor, Assembly Language and Computer Interfacing",
+    "description": "Study of microprocessor architecture, assembly language programming, and hardware interfacing techniques. Covers instruction sets, memory organization, and peripheral device communication. Foundation for embedded systems development.",
+    "credits": 3,
+    "prerequisites": ["CSE-3121"],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T1",
+    "course_code": "CSE-4102",
+    "title": "Microprocessor, Assembly Language and Computer Interfacing Sessional",
+    "description": "Practical programming of microprocessors and interfacing with external devices. Students write assembly code and build interfacing circuits for real applications. Develops low-level programming and hardware integration skills.",
+    "credits": 1,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T1",
+    "course_code": "CSE-4115",
+    "title": "Web Technologies",
+    "description": "Study of web development technologies including HTML, CSS, JavaScript, and server-side programming. Covers web architecture, APIs, and modern frameworks for building dynamic applications. Prepares students for full-stack web development.",
+    "credits": 2,
+    "prerequisites": ["CSE-3113"],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T1",
+    "course_code": "CSE-4116",
+    "title": "Web Technologies Sessional",
+    "description": "Hands-on web development creating responsive websites and web applications. Students implement frontend and backend components using modern tools and frameworks. Builds portfolio-ready web development projects.",
+    "credits": 2,
+    "prerequisites": ["CSE-3114"],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T1",
+    "course_code": "CSE-4203",
+    "title": "Management Information System",
+    "description": "Study of information systems in business contexts including decision support and enterprise systems. Covers system analysis, database integration, and IT management strategies. Bridges technical knowledge with business applications.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T1",
+    "course_code": "CSE-****",
+    "title": "Elective I",
+    "description": "This is a theory based elective course. Students are required to select one course from the available elective offerings.",
+    "credits": 3,
+    "prerequisites": ["100 Credit"],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T2",
+    "course_code": "CSE-4211",
+    "title": "Operating System",
+    "description": "Comprehensive study of OS concepts including process management, memory management, and file systems. Covers concurrency, scheduling algorithms, and virtualization techniques. Essential for understanding system software and resource management.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": ["Operating System Concepts — Abraham Silberschatz"]
+  },
+  {
+    "semester": "Y4 T2",
+    "course_code": "CSE-4212",
+    "title": "Operating System Sessional",
+    "description": "Practical exploration of operating system concepts through shell programming and system calls. Students implement process management and synchronization mechanisms. Reinforces OS theory through hands-on system programming.",
+    "credits": 1,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T2",
+    "course_code": "CSE-4111",
+    "title": "Artificial Intelligence",
+    "description": "Introduction to AI concepts including search algorithms, knowledge representation, and machine learning basics. Covers intelligent agents, planning, and natural language processing fundamentals. Foundation for advanced AI and data science study.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": [
+      "Artificial Intelligence: A Modern Approach — Stuart Russell and Peter Norvig"
+    ]
+  },
+  {
+    "semester": "Y4 T2",
+    "course_code": "CSE-4112",
+    "title": "Artificial Intelligence Sessional",
+    "description": "Implementation of AI algorithms and techniques through programming exercises and projects. Students build search systems, game playing agents, and simple learning models. Develops practical AI problem-solving skills.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T2",
+    "course_code": "CSE-****",
+    "title": "Elective II",
+    "description": "This is a theory based elective course. Students are required to select one course from the available elective offerings.",
+    "credits": 2,
+    "prerequisites": ["100 Credit"],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T2",
+    "course_code": "CSE-****",
+    "title": "Elective II Sessional",
+    "description": "This is a lab based elective course. Students are required to select one course from the available elective offerings.",
+    "credits": 1.5,
+    "prerequisites": ["100 Credit"],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T2",
+    "course_code": "CSE-4140",
+    "title": "Project/Thesis II Part-1",
+    "description": "First phase of capstone project involving proposal development, literature review, and initial implementation. Students work under faculty guidance on substantial research or development problems. Develops research and project planning skills.",
+    "credits": 2,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T3",
+    "course_code": "CSE-****",
+    "title": "Elective III",
+    "description": "This is a theory based elective course. Students are required to select one course from the available elective offerings.",
+    "credits": 3,
+    "prerequisites": ["115 Credit"],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T3",
+    "course_code": "CSE-****",
+    "title": "Elective IV",
+    "description": "This is a theory based elective course. Students are required to select one course from the available elective offerings.",
+    "credits": 2,
+    "prerequisites": ["115 Credit"],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T3",
+    "course_code": "CSE-****",
+    "title": "Elective IV Sessional",
+    "description": "This is a lab based elective course. Students are required to select one course from the available elective offerings.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Y4 T3",
+    "course_code": "CSE-4240",
+    "title": "Project/Thesis II Part-2",
+    "description": "Completion of capstone project including full implementation, testing, and documentation. Students present their work and defend their solutions before evaluation committee. Culmination of undergraduate learning experience.",
+    "credits": 4,
+    "prerequisites": ["CSE-4140"],
+    "resources": []
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4261",
+    "title": "Computer Graphics",
+    "description": "Study of graphics algorithms including rendering, transformation, and animation techniques. Covers 2D and 3D graphics, shading models, and geometric modeling. Foundation for game development and visualization applications.",
+    "credits": 2,
+    "prerequisites": ["CSE-1211"],
+    "resources": ["Computer Graphics: Principles and Practice — John F. Hughes"]
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4262",
+    "title": "Computer Graphics Sessional",
+    "description": "Implementation of graphics algorithms using programming libraries and tools. Students create interactive graphics applications and visualizations. Develops skills in graphical programming and rendering techniques.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4263",
+    "title": "Bio Informatics",
+    "description": "Introduction to computational methods for analyzing biological data including sequences and structures. Covers algorithms for genome analysis, protein modeling, and biological databases. Intersection of computer science and molecular biology.",
+    "credits": 2,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4264",
+    "title": "Bio Informatics Sessional",
+    "description": "Practical application of bioinformatics tools and algorithms on real biological datasets. Students use software for sequence alignment, phylogenetic analysis, and structure prediction. Develops computational biology research skills.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4265",
+    "title": "Digital Signal Processing",
+    "description": "Study of signal analysis techniques including Fourier transforms, filtering, and sampling theory. Covers digital filter design and spectral analysis methods. Essential for audio, image processing, and communications applications.",
+    "credits": 2,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4266",
+    "title": "Digital Signal Processing Sessional",
+    "description": "Implementation of DSP algorithms using programming tools and simulation software. Students design and test digital filters and signal processing systems. Reinforces signal processing theory through practical applications.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4267",
+    "title": "Machine Learning",
+    "description": "Introduction to machine learning algorithms including supervised and unsupervised learning techniques. Covers classification, regression, clustering, and model evaluation methods. Foundation for data science and AI applications.",
+    "credits": 2,
+    "prerequisites": [],
+    "resources": [
+      "Pattern Recognition and Machine Learning — Christopher M. Bishop",
+      "The Elements of Statistical Learning — Trevor Hastie"
+    ]
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4268",
+    "title": "Machine Learning Sessional",
+    "description": "Practical implementation of machine learning algorithms using libraries and real datasets. Students build predictive models, evaluate performance, and tune hyperparameters. Develops hands-on data science and ML engineering skills.",
+    "credits": 1.5,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4161",
+    "title": "Information Security & Cryptography",
+    "description": "Study of security principles, cryptographic algorithms, and network protection mechanisms. Covers encryption, authentication, and security protocols for data protection. Essential for cybersecurity and secure system design.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": ["Cryptography and Network Security — William Stallings"]
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4133",
+    "title": "Cellular Mobile and Satellite Communication",
+    "description": "Study of wireless communication systems including cellular networks and satellite technologies. Covers mobile protocols, frequency management, and emerging wireless standards. Prepares students for telecommunications industry roles.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4135",
+    "title": "Cloud Computing",
+    "description": "Introduction to cloud architectures, services, and deployment models including IaaS, PaaS, and SaaS. Covers virtualization, distributed systems, and cloud security considerations. Essential for modern scalable application development.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4163",
+    "title": "Internet of Things",
+    "description": "Study of IoT architectures, sensor networks, and connected device ecosystems. Covers data collection, edge computing, and IoT security challenges. Prepares students for developing smart and connected systems.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4165",
+    "title": "Neural Network and Fuzzy Logic",
+    "description": "Study of artificial neural networks, deep learning architectures, and fuzzy inference systems. Covers training algorithms, network design, and intelligent system applications. Advanced AI course for specialized knowledge.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": ["Deep Learning — Ian Goodfellow"]
+  },
+  {
+    "semester": "Elective",
+    "course_code": "CSE-4167",
+    "title": "Human Computer Interaction",
+    "description": "Study of user interface design principles, usability evaluation, and user experience methodologies. Covers interaction design, accessibility, and user-centered development processes. Essential for creating effective and intuitive software.",
+    "credits": 3,
+    "prerequisites": [],
+    "resources": []
+  }
+]
