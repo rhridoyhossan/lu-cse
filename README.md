@@ -3,7 +3,7 @@
 # 🖥️ Campus_OS: Batch 68
 
 ![Status](https://img.shields.io/badge/System-Online-success?style=for-the-badge&logo=linux)
-![Version](https://img.shields.io/badge/Version-1.1.1-cyan?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-2.0.0-cyan?style=for-the-badge)
 ![Batch](https://img.shields.io/badge/CSE-Batch_68-purple?style=for-the-badge)
 
 > **"Compiled with Dedication. Executed with Spirit."**

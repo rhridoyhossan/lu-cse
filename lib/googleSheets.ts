@@ -18,12 +18,6 @@ async function fetchSheetsActual() {
     const ranges = [
       "General!A2:G",
       "Events!A2:I",
-      "Sec-A!A2:F",
-      "Sec-B!A2:F",
-      "Sec-C!A2:F",
-      "Sec-D!A2:F",
-      "Sec-E!A2:F",
-      "Sec-F!A2:F",
       "Resources!A2:E",
     ];
 
@@ -38,15 +32,7 @@ async function fetchSheetsActual() {
     return {
       general: valueRanges[0].values || [],
       events: valueRanges[1].values || [],
-      sections: {
-        "Sec-A": valueRanges[2].values || [],
-        "Sec-B": valueRanges[3].values || [],
-        "Sec-C": valueRanges[4].values || [],
-        "Sec-D": valueRanges[5].values || [],
-        "Sec-E": valueRanges[6].values || [],
-        "Sec-F": valueRanges[7].values || [],
-      },
-      resources: valueRanges[8].values || [],
+      resources: valueRanges[2].values || [],
       lastFetched: Date.now(),
     };
   } catch (error) {
