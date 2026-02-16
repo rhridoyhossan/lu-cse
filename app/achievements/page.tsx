@@ -49,7 +49,7 @@ export default function AchievementsPage() {
           <p className="text-slate-500 text-sm md:text-base leading-relaxed">
             The Hall of Fame is currently empty.
             <br />
-            Waiting for <span className="text-yellow-500">Batch 68</span> to
+            Waiting for <span className="text-yellow-500">LU, CSE</span> to
             make history.
           </p>
         </div>

@@ -106,7 +106,7 @@ export default function DashboardHero({
             <div className="head-element opacity-0 flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-700">
               <Shield size={10} className="text-slate-400" />
               <span className="text-[10px] uppercase tracking-widest text-slate-300 font-bold">
-                Leading University • CSE Batch 68
+                Leading University • CSE
               </span>
             </div>
           </div>
@@ -256,7 +256,7 @@ export default function DashboardHero({
 
         {/* GitHub Card */}
         <Link
-          href="https://github.com/rhridoyhossan/lu-cse-68"
+          href="https://github.com/rhridoyhossan/lu-cse"
           target="_blank"
           className="notice-element opacity-0 group relative bg-slate-900/70 border border-slate-800 rounded-2xl p-6 hover:bg-slate-900 hover:border-cyan-500/50 transition-colors"
         >

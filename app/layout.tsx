@@ -8,9 +8,9 @@ import SmoothScrollProvider from "@/lib/SmoothScrollProvider";
 const mono = JetBrains_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LU CSE 68",
+  title: "LU CSE",
   description:
-    "Where Dedication Compiles and Spirit Executes. Leading University CSE: Batch 68",
+    "Where Dedication Compiles and Spirit Executes. Leading University CSE",
 };
 
 export default function RootLayout({
