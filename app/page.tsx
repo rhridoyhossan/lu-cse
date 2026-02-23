@@ -5,7 +5,7 @@ import GridBackground from '@/components/GridBackground';
 const HomePage = async() => {
   const db = await getBatchData();
   const generalNews = db?.general || [];
-  const latestNotice = generalNews.length > 0 ? generalNews[0] : null; // Latest notice
+  const latestNotice = generalNews.length > 0 ? generalNews.at(-1) : null; // Latest notice
 
   return (
     <>

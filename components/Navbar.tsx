@@ -41,8 +41,7 @@ const Navbar = () => {
     { href: "/notices", label: "Notices" },
     { href: "/events", label: "Events" },
     { href: "/curriculum", label: "Curriculum" },
-    { href: "/resources", label: "Library" },
-    { href: "/achievements", label: "Trophies" },
+    { href: "/resources", label: "Library" }
   ];
 
   return (
