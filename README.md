@@ -3,7 +3,7 @@
 # 🖥️ Campus_OS
 
 ![Status](https://img.shields.io/badge/System-Online-success?style=for-the-badge&logo=linux)
-![Version](https://img.shields.io/badge/Version-2.0.0-cyan?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-3.0.0-cyan?style=for-the-badge)
 ![Batch](https://img.shields.io/badge/LU-CSE-purple?style=for-the-badge)
 
 > **"Compiled with Dedication. Executed with Spirit."**

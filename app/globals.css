@@ -120,24 +120,18 @@ html {
   scrollbar-gutter: stable;
 }
 
-/* Optional: Make the scrollbar look "Cyberpunk" to match your theme */
 ::-webkit-scrollbar {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f172a; /* Slate-900 */
+  background: #0f172a;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155; /* Slate-700 */
+  background: #334155;
   border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #06b6d4; /* Cyan-500 */
-}
-
-@keyframes scan {
-  0%, 100% { transform: translateY(-150px); opacity: 0; }
-  50% { transform: translateY(150px); opacity: 1; }
+  background: #06b6d4;
 }
 
 @layer base {
@@ -149,7 +143,6 @@ html {
   }
 }
 
-
 @layer utilities {
   .animate-fade {
     @apply animate-in fade-in slide-in-from-bottom-4 duration-700;
@@ -158,7 +151,7 @@ html {
   .glitch {
     position: relative;
   }
-  
+
   .glitch::before,
   .glitch::after {
     content: attr(data-text);
@@ -169,14 +162,14 @@ html {
     height: 100%;
     background: #020617; /* Matches bg-slate-950 */
   }
-  
+
   .glitch::before {
     left: 2px;
     text-shadow: -2px 0 #ff00c1;
     clip: rect(44px, 450px, 56px, 0);
     animation: glitch-anim 5s infinite linear alternate-reverse;
   }
-  
+
   .glitch::after {
     left: -2px;
     text-shadow: -2px 0 #00fff9;
@@ -185,20 +178,44 @@ html {
   }
 
   @keyframes glitch-anim {
-    0% { clip: rect(38px, 9999px, 81px, 0); }
-    20% { clip: rect(4px, 9999px, 83px, 0); }
-    40% { clip: rect(78px, 9999px, 20px, 0); }
-    60% { clip: rect(15px, 9999px, 49px, 0); }
-    80% { clip: rect(56px, 9999px, 2px, 0); }
-    100% { clip: rect(69px, 9999px, 86px, 0); }
+    0% {
+      clip: rect(38px, 9999px, 81px, 0);
+    }
+    20% {
+      clip: rect(4px, 9999px, 83px, 0);
+    }
+    40% {
+      clip: rect(78px, 9999px, 20px, 0);
+    }
+    60% {
+      clip: rect(15px, 9999px, 49px, 0);
+    }
+    80% {
+      clip: rect(56px, 9999px, 2px, 0);
+    }
+    100% {
+      clip: rect(69px, 9999px, 86px, 0);
+    }
   }
 
   @keyframes glitch-anim2 {
-    0% { clip: rect(12px, 9999px, 62px, 0); }
-    20% { clip: rect(77px, 9999px, 4px, 0); }
-    40% { clip: rect(34px, 9999px, 58px, 0); }
-    60% { clip: rect(89px, 9999px, 92px, 0); }
-    80% { clip: rect(2px, 9999px, 16px, 0); }
-    100% { clip: rect(51px, 9999px, 24px, 0); }
+    0% {
+      clip: rect(12px, 9999px, 62px, 0);
+    }
+    20% {
+      clip: rect(77px, 9999px, 4px, 0);
+    }
+    40% {
+      clip: rect(34px, 9999px, 58px, 0);
+    }
+    60% {
+      clip: rect(89px, 9999px, 92px, 0);
+    }
+    80% {
+      clip: rect(2px, 9999px, 16px, 0);
+    }
+    100% {
+      clip: rect(51px, 9999px, 24px, 0);
+    }
   }
 }
