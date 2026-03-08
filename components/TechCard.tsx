@@ -7,9 +7,8 @@ import { Terminal, ArrowUpRight, Eye, User } from "lucide-react";
 interface TechCardProps {
   data: {
     title: string;
-    description: string;
     category?: string;
-    link: string;
+    link?: string;
     imageUrl?: string;
     author?: string;
     class?: string;
@@ -39,7 +38,7 @@ export default function TechCard({ data }: TechCardProps) {
         className={`${data.class} group relative h-full flex flex-col bg-slate-950 border border-slate-800 rounded-xl overflow-hidden hover:border-cyan-500/50 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.15)]`}
       >
         {/* Header */}
-        <div className="bg-slate-900/80 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between backdrop-blur-md z-20">
+        <div className="bg-slate-900/80 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between backdrop-blur-md z-20 cursor-default">
           <div className="flex gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
             <div className="w-2.5 h-2.5 rounded-full bg-red-500/80 shadow-[0_0_8px_rgba(239,68,68,0.4)]" />
             <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 shadow-[0_0_8px_rgba(234,179,8,0.4)]" />
@@ -57,9 +56,11 @@ export default function TechCard({ data }: TechCardProps) {
         {/* Content Area */}
         <div className="flex-1 p-5 relative flex flex-col">
           {/* Background Effects */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[24px_24px] pointer-events-none opacity-50" />
-          <div className="absolute top-4 right-4 w-2 h-2 border-t border-r border-slate-800 group-hover:border-cyan-500/50 transition-colors opacity-50 group-hover:opacity-100" />
-          <div className="absolute bottom-4 left-4 w-2 h-2 border-b border-l border-slate-800 group-hover:border-cyan-500/50 transition-colors opacity-50 group-hover:opacity-100" />
+          <>
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[24px_24px] pointer-events-none opacity-50" />
+            <div className="absolute top-4 right-4 w-2 h-2 border-t border-r border-slate-800 group-hover:border-cyan-500/50 transition-colors opacity-50 group-hover:opacity-100" />
+            <div className="absolute bottom-4 left-4 w-2 h-2 border-b border-l border-slate-800 group-hover:border-cyan-500/50 transition-colors opacity-50 group-hover:opacity-100" />
+          </>
 
           <div className="relative z-10 flex-1">
             <div className="flex justify-between items-start mb-4">
@@ -71,27 +72,35 @@ export default function TechCard({ data }: TechCardProps) {
               </Badge>
             </div>
 
-            {/* Title & Description */}
-            <h3 className="text-lg font-bold text-slate-200 group-hover:text-cyan-400 transition-colors font-mono tracking-tight leading-snug mb-3">
-              {data.title}
-            </h3>
-            {data.description && (
-              <div className="pl-3 border-l-2 border-slate-800 group-hover:border-cyan-500/50 transition-all duration-300">
-                <p className="text-xs text-slate-400 font-mono leading-relaxed line-clamp-3">
-                  <span className="text-slate-600 select-none mr-2">{`>>`}</span>
-                  {data.description}
-                </p>
-              </div>
+            {/* Title */}
+            {data.link ? (
+              <a
+                href={data.link}
+                target="_blank"
+                rel="noreferrer"
+                className="block text-lg font-bold text-slate-200 hover:text-green-300 transition-colors font-mono tracking-tight mb-3 cursor-pointer"
+              >
+                {data.title}
+              </a>
+            ) : (
+              <h3
+                className={`text-lg font-bold text-slate-200 hover:text-green-400 transition-colors font-mono tracking-tight mb-3 ${
+                  data.imageUrl ? "cursor-pointer" : "cursor-default"
+                }`}
+                onClick={() => data.imageUrl && setSelectedImage(data.imageUrl)}
+              >
+                {data.title}
+              </h3>
             )}
           </div>
 
           {/* Footer */}
-          <div className="mt-6 pt-4 border-t border-slate-800/50 flex justify-between items-center relative z-10 gap-4">
+          <div className=" pt-4 border-t border-slate-800/50 flex justify-between items-center relative z-10 gap-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <div className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyan-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
                 </div>
                 <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">
                   Live

@@ -34,10 +34,9 @@ export default function SectionTabs({ notices }: { notices: any[] }) {
             data={{
               title: row[0],
               category: "GENERAL",
-              description: row[1],
-              imageUrl: row[2],
-              link: row[3],
-              author: row[4],
+              imageUrl: row[1],
+              link: row[2],
+              author: row[3],
               class: "notice-element opacity-0",
             }}
           />
