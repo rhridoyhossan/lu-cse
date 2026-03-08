@@ -2,7 +2,7 @@
 
 # 🖥️ Campus_OS
 
-![Views](https://komarev.com/ghpvc/?username=rhridoyhossan&repo=lu-cse&label=VIEWS&color=00ffff&style=for-the-badge)
+![Views](https://komarev.com/ghpvc/?username=rhridoyhossan&repo=lu-cse&label=VIEWS&color=blue&style=for-the-badge)
 ![Status](https://img.shields.io/badge/System-Online-success?style=for-the-badge&logo=linux)
 ![Version](https://img.shields.io/github/package-json/v/rhridoyhossan/lu-cse?style=for-the-badge&color=cyan&label=Version)
 ![Batch](https://img.shields.io/badge/LU-CSE-purple?style=for-the-badge)
