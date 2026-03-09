@@ -11,6 +11,19 @@ export const metadata: Metadata = {
   title: "LU CSE | Campus_OS",
   description:
     "Where Dedication Compiles and Spirit Executes. Leading University CSE",
+  keywords: [
+    "LU CSE",
+    "Leading University",
+    "Campus_OS",
+    "Batch 68",
+    "Sylhet",
+    "university portal",
+    "CSE",
+  ],
+  metadataBase: new URL(process.env.PRODUCTION_URL!),
+  verification: {
+    google: "3lTv94Y_Zl_MCTL1NvWC5IGbSQDasLnMKhQGeUBaHKw",
+  },
 };
 
 export default function RootLayout({
