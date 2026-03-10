@@ -8,7 +8,7 @@ import SmoothScrollProvider from "@/lib/SmoothScrollProvider";
 const mono = JetBrains_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LU CSE | Campus_OS",
+  title: "LU CSE | Campus_OS — Leading University CSE Portal",
   description:
     "Where Dedication Compiles and Spirit Executes. Leading University CSE",
   keywords: [
@@ -20,7 +20,16 @@ export const metadata: Metadata = {
     "university portal",
     "CSE",
   ],
+  openGraph: {
+    siteName: "LU CSE | Campus_OS",
+    url: new URL(process.env.PRODUCTION_URL!),
+  },
   metadataBase: new URL(process.env.PRODUCTION_URL!),
+  robots: {
+    index: true,
+    follow: true,
+    nosnippet: true,
+  },
   verification: {
     google: "3lTv94Y_Zl_MCTL1NvWC5IGbSQDasLnMKhQGeUBaHKw",
   },

@@ -3,8 +3,8 @@ import RoutineManager from "@/components/RoutineManager";
 import { Calendar } from "lucide-react";
 
 export const metadata = {
-  title: "Class Routine | Campus_OS",
-  description: "Class Routine For All CSE Batch - Campus_OS",
+  title: "Class Routine | LU CSE Campus_OS",
+  description: "View the latest class routine and timetable for Leading University CSE students in Sylhet. Stay on schedule with Campus_OS.",
 };
 
 export default function RoutinePage() {

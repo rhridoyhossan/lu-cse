@@ -2,7 +2,8 @@ import { getBatchData } from "@/lib/googleSheets";
 import EventCard from "@/components/EventCard";
 
 export const metadata = {
-  title: "Events | Campus_OS",
+  title: "Events | LU CSE Campus_OS",
+  description: "Explore campus events, activities from Leading University CSE, Sylhet.",
 };
 
 export default async function EventsPage() {

@@ -2,7 +2,8 @@ import { getBatchData } from "@/lib/googleSheets";
 import SectionTabs from "@/components/SectionTabs";
 
 export const metadata = {
-  title: "Notices | Campus_OS",
+  title: "Notices | LU CSE Campus_OS",
+  description: "Stay updated with the latest academic notices, exam schedules, vacation announcements, and updates for Leading University CSE students.",
 };
 
 export default async function NoticesPage() {

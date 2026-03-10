@@ -2,7 +2,8 @@ import CurriculumList from "@/components/CurriculumList";
 import curriculumData from "@/data/curriculum.json";
 
 export const metadata = {
-  title: "Curriculum | Campus_OS",
+  title: "Curriculum Map | LU CSE Campus_OS",
+  description: "Navigate the complete 12-semester CSE curriculum roadmap at Leading University Sylhet. Explore courses, credit, and semester-wise breakdown.",
 };
 
 export default function CurriculumPage() {
