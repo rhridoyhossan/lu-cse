@@ -1,6 +1,35 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { google } from "googleapis";
+import { unstable_cache } from "next/cache";
+
+const getCachedUsers = unstable_cache(
+  async () => {
+    try {
+      const googleAuth = new google.auth.GoogleAuth({
+        credentials: {
+          client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+          private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+        },
+        scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+      });
+
+      const sheets = google.sheets({ version: "v4", auth: googleAuth });
+
+      const response = await sheets.spreadsheets.values.get({
+        spreadsheetId: process.env.GOOGLE_SHEET_ID,
+        range: "Users!A2:E",
+      });
+
+      return response.data.values;
+    } catch (error) {
+      console.error("Google Sheets Fetch Error:", error);
+      return null;
+    }
+  },
+  ["google-sheets-users-auth"],
+  { revalidate: 20 },
+);
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -15,22 +44,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!credentials?.username || !credentials?.password) return null;
 
         try {
-          const googleAuth = new google.auth.GoogleAuth({
-            credentials: {
-              client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-              private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-            },
-            scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
-          });
+          const rows = await getCachedUsers();
 
-          const sheets = google.sheets({ version: "v4", auth: googleAuth });
-
-          const response = await sheets.spreadsheets.values.get({
-            spreadsheetId: process.env.GOOGLE_SHEET_ID,
-            range: "Users!A2:E",
-          });
-
-          const rows = response.data.values;
           if (!rows || rows.length === 0) return null;
 
           const userRow = rows.find((row) => row[0] === credentials.username);
