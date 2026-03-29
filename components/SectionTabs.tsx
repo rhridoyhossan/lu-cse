@@ -4,23 +4,37 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import TechCard from "@/components/TechCard";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function SectionTabs({ notices }: { notices: any[] }) {
   const noticesRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      gsap.fromTo(
-        ".notice-element",
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.2,
-          delay: 0.2,
-          ease: "power3.out",
+      ScrollTrigger.batch(".notice-element", {
+        onEnter: (elements) => {
+          gsap.fromTo(
+            elements,
+            {
+              opacity: 0,
+              y: 30,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              stagger: 0.1,
+              ease: "power3.out",
+              overwrite: true,
+            },
+          );
         },
-      );
+        onLeaveBack: (elements) => {
+          gsap.set(elements, { opacity: 0, y: 30 });
+        },
+        start: "top 90%",
+      });
     },
     { scope: noticesRef },
   );

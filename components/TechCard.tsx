@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { Terminal, ArrowUpRight, Eye, User } from "lucide-react";
+import { Terminal, ArrowUpRight, Eye, User, Loader2 } from "lucide-react";
 
 interface TechCardProps {
   data: {
@@ -18,18 +18,27 @@ interface TechCardProps {
 export default function TechCard({ data }: TechCardProps) {
   const hasImage = Boolean(data.imageUrl);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   return (
     <>
       {selectedImage && (
         <div
-          className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 cursor-zoom-out"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
           onClick={() => setSelectedImage(null)}
         >
+          {isImageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader2 className="w-10 h-10 text-cyan-500 animate-spin" />
+            </div>
+          )}
           <img
             src={selectedImage}
             alt="Full size"
-            className="max-h-[90vh] max-w-[95vw] object-contain rounded-md shadow-2xl"
+            onLoad={() => setIsImageLoading(false)}
+            className={`max-h-[90vh] max-w-[95vw] object-contain rounded-md shadow-2xl transition-opacity duration-300 ${
+              isImageLoading ? "opacity-0" : "opacity-100"
+            }`}
           />
         </div>
       )}

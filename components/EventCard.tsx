@@ -3,10 +3,12 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useRef, useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const EventCard = ({ data }: any) => {
   const eventRef = useRef<HTMLDivElement>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   useGSAP(
     () => {
@@ -24,13 +26,21 @@ const EventCard = ({ data }: any) => {
     <>
       {selectedImage && (
         <div
-          className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 cursor-zoom-out"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
           onClick={() => setSelectedImage(null)}
         >
+          {isImageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader2 className="w-10 h-10 text-cyan-500 animate-spin" />
+            </div>
+          )}
           <img
             src={selectedImage}
             alt="Full size"
-            className="max-h-[90vh] max-w-[95vw] object-contain rounded-md shadow-2xl"
+            onLoad={() => setIsImageLoading(false)}
+            className={`max-h-[90vh] max-w-[95vw] object-contain rounded-md shadow-2xl transition-opacity duration-300 ${
+              isImageLoading ? "opacity-0" : "opacity-100"
+            }`}
           />
         </div>
       )}

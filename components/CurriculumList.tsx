@@ -59,8 +59,7 @@ export default function CurriculumList({ data }: { data: any[] }) {
               trigger: section,
               start: "top 90%",
               end: "bottom 10%",
-              // play: Enter, reverse: Leave, restart: EnterBack, reverse: LeaveBack
-              toggleActions: "play reverse restart reverse",
+              toggleActions: "play none none reverse",
             },
           },
         );
