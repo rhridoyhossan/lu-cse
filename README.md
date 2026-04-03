@@ -39,6 +39,7 @@ No account needed for students. The admin dashboard, protected by NextAuth crede
 | Curriculum Map | Interactive 12-semester course breakdown with prerequisites and resources |
 | Resources | Searchable and filterable library of PDFs, books, videos, and tools |
 | Routine | Dynamic class timetable, select your batch and section, download as PNG |
+| Question Bank | Searchable course archive with past exam files, question patterns, and evaluation breakdowns per course |
 | Admin Dashboard | Protected CRUD panel backed by Google Sheets |
 
 ---
@@ -97,6 +98,13 @@ ClientDashboard --> /api/upload --> ImgBB API
                     Returns URL, stored in Sheets
 
 
+                        Question Bank
+                             |
+Google Drive (Course Folders) --> /api/course?code=X (x-internal-token)
+                             |
+                    CourseDetailsPage (client fetch on mount)
+
+
                         Auth + Route Guards
                              |
 auth.ts (NextAuth) --> proxy.ts (session check + API firewall)
@@ -111,8 +119,8 @@ auth.ts (NextAuth) --> proxy.ts (session check + API firewall)
 ### Prerequisites
 
 - Node.js 18 or higher
-- A Google Cloud project with the Sheets API enabled
-- A Google Service Account with access to your main spreadsheet
+- A Google Cloud project with the Sheets, Drive API enabled
+- A Google Service Account with access to your main spreadsheet & Drive Folder
 - A separate Google Sheets API Key for the routine spreadsheet (public read-only)
 - An ImgBB account and API key
 
@@ -139,6 +147,9 @@ GOOGLE_PRIVATE_KEY=
 # Google Sheets - API Key (routine sheet, read-only public access)
 GOOGLE_SHEETS_API_KEY=
 STUDENT_ROUTINE_SHEET_ID=
+
+# Drive Folder Id
+DRIVE_FOLDER_ID=
 
 # Internal API token
 NEXT_PUBLIC_INTERNAL_API_SECRET=
@@ -218,6 +229,21 @@ API routes use two protection layers:
       <img src="screenshots/dashboard_myEntries.png" alt="My Entries" width="100%"/>
     </td>
     <td></td>
+  </tr>
+</table>
+
+### Question Bank
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <strong>Course Index</strong><br/><br/>
+      <img src="screenshots/question-bank.png" alt="Question Bank" width="100%"/>
+    </td>
+    <td align="center" width="50%">
+      <strong>Course Detail</strong><br/><br/>
+      <img src="screenshots/example-course.png" alt="Course Detail" width="100%"/>
+    </td>
   </tr>
 </table>
 
