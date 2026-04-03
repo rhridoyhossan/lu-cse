@@ -14,6 +14,11 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
+const isActiveRoute = (pathname: string, href: string) => {
+  if (href === "/") return pathname === "/";
+  return pathname.startsWith(href);
+};
+
 const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +47,8 @@ const Navbar = () => {
     { href: "/events", label: "Events" },
     { href: "/curriculum", label: "Curriculum" },
     { href: "/resources", label: "Resources" },
-    { href: "/routine", label: "Routine" }
+    { href: "/routine", label: "Routine" },
+    { href: "/question-bank", label: "Questions" }
   ];
 
   return (
@@ -60,19 +66,21 @@ const Navbar = () => {
 
         {/* DESKTOP MENU */}
         <div className="hidden md:flex gap-6">
-          {links.map((link) => (
+          {links.map((link) => {
+            const active = isActiveRoute(pathname, link.href);
+            return (
             <Link
               key={link.href}
               href={link.href}
               className={`nav-link text-sm font-mono transition-colors ${
-                pathname === link.href
+                active
                   ? "text-cyan-400 border-b-2 border-cyan-500 pb-1"
                   : "text-slate-400 hover:text-white"
               }`}
             >
               {link.label}
             </Link>
-          ))}
+          )})}
         </div>
 
         {/* MOBILE MENU TRIGGER */}
@@ -140,13 +148,15 @@ const MobileMenu = ({
       </div>
 
       <div className="flex flex-col p-6 gap-4">
-        {links.map((link) => (
+        {links.map((link) => {
+          const active = isActiveRoute(pathname, link.href);
+          return (
           <Link
             key={link.href}
             href={link.href}
             onClick={() => setIsOpen(false)}
             className={`mobile-link text-lg font-mono py-2 transition-colors flex items-center justify-between group ${
-              pathname === link.href
+              active
                 ? "text-cyan-400 font-bold"
                 : "text-slate-400 hover:text-white"
             }`}
@@ -160,7 +170,7 @@ const MobileMenu = ({
               →
             </span>
           </Link>
-        ))}
+        )})}
       </div>
     </div>
   );

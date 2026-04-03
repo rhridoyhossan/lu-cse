@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const NotFound = () => {
   return (
-    <div className="h-screen w-full bg-slate-950 flex flex-col items-center justify-center font-mono text-center overflow-hidden relative">
+    <div className="h-[calc(100vh-5rem)] w-full bg-slate-950 flex flex-col items-center justify-center font-mono text-center overflow-hidden relative">
       <GridBackground />
 
       <div className="relative z-10">
