@@ -23,12 +23,24 @@ async function fetchSheetsActual() {
     });
 
     const valueRanges = response.data.valueRanges || [];
+    const cleanData = (data: any) => {
+      if (!data) return [];
+
+      return data.filter((row: any) => {
+        if (!row || row.length === 0) return false;
+        const hasRealData = row.some(
+          (cell: any) => cell && String(cell).trim() !== "",
+        );
+
+        return hasRealData;
+      });
+    };
 
     // Return the clean data structure
     return {
-      general: valueRanges[0].values || [],
-      events: valueRanges[1].values || [],
-      resources: valueRanges[2].values || [],
+      general: cleanData(valueRanges[0].values),
+      events: cleanData(valueRanges[1].values),
+      resources: cleanData(valueRanges[2].values),
       lastFetched: Date.now(),
     };
   } catch (error) {
