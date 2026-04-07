@@ -88,6 +88,30 @@ export default function QuestionBankPage() {
         </p>
       </div>
 
+      <div className="mb-8 xmCard group">
+        <div className="bg-slate-900/40 border border-slate-800/50 rounded-lg p-4 transition-colors group-hover:border-cyan-900/50">
+          <p className="text-sm text-slate-400 mb-3">
+            Special thanks to{" "}
+            <span className="text-cyan-400 font-bold">
+              Sourob MD (Batch 60)
+            </span>{" "}
+            for providing the core question repository.
+          </p>
+
+          <Link
+            href="https://drive.google.com/drive/folders/1-1HFZVeKxB8cWp_hILcjM_-qsWAlJS37"
+            target="_blank"
+            className="inline-flex items-center gap-2 text-[11px] font-mono text-slate-500 hover:text-cyan-400 transition-colors bg-slate-950 px-3 py-1.5 rounded border border-slate-800"
+          >
+            <span className="text-cyan-700">LINK:</span>
+            <span className="truncate max-w-50 md:max-w-md">
+              drive.google.com/source-materials
+            </span>
+            <ArrowRight size={12} />
+          </Link>
+        </div>
+      </div>
+
       {/* Summary Card */}
       <div className="mb-14 xmCard">
         <h2 className="text-lg font-bold text-slate-300 mb-6 flex items-center gap-2">
