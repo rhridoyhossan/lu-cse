@@ -4,7 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import RoutineTable from "./RoutineTable";
 import TeacherRoutineTable from "./TeacherRoutineTable";
-import { Loader2, GraduationCap, UserSquare2, Search, ChevronDown } from "lucide-react";
+import {
+  Loader2,
+  GraduationCap,
+  UserSquare2,
+  Search,
+  ChevronDown,
+} from "lucide-react";
 
 interface BatchData {
   batch: string;
@@ -15,7 +21,7 @@ export default function RoutineManager() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  
+
   const typeParam = searchParams.get("type");
   const activeTab = typeParam === "teacher" ? "teacher" : "student"; // Default student
 
@@ -31,7 +37,6 @@ export default function RoutineManager() {
   const [teacherSearch, setTeacherSearch] = useState<string>("");
   const [isTeacherDropdownOpen, setIsTeacherDropdownOpen] = useState(false);
   const [teacherRoutine, setTeacherRoutine] = useState<any>(null);
-  
 
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -42,7 +47,10 @@ export default function RoutineManager() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsTeacherDropdownOpen(false);
       }
     };
@@ -54,7 +62,9 @@ export default function RoutineManager() {
   // Fetch Both Api GET Requests
   useEffect(() => {
     fetch("/api/routine", {
-      headers: { "x-internal-token": process.env.NEXT_PUBLIC_INTERNAL_API_SECRET || "" },
+      headers: {
+        "x-internal-token": process.env.NEXT_PUBLIC_INTERNAL_API_SECRET || "",
+      },
     })
       .then((res) => res.json())
       .then((data) => {
@@ -62,7 +72,11 @@ export default function RoutineManager() {
       })
       .catch(() => console.error("Failed to fetch batches"));
 
-    fetch("/api/teacher-routine")
+    fetch("/api/teacher-routine", {
+      headers: {
+        "x-internal-token": process.env.NEXT_PUBLIC_INTERNAL_API_SECRET || "",
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data.teachers) setTeachers(data.teachers);
@@ -78,7 +92,7 @@ export default function RoutineManager() {
     }
 
     setLoading(true);
-    
+
     fetch("/api/routine", {
       method: "POST",
       headers: {
@@ -106,15 +120,20 @@ export default function RoutineManager() {
 
     fetch("/api/teacher-routine", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-internal-token": process.env.NEXT_PUBLIC_INTERNAL_API_SECRET || "",
+      },
       body: JSON.stringify({ teacher: selectedTeacher }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.error) throw new Error(data.error);
-        
-        const hasClasses = Object.values(data.routine).some((dayClasses: any) => dayClasses.length > 0);
-        
+
+        const hasClasses = Object.values(data.routine).some(
+          (dayClasses: any) => dayClasses.length > 0,
+        );
+
         if (!hasClasses) {
           setTeacherRoutine(null);
         } else {
@@ -125,11 +144,12 @@ export default function RoutineManager() {
       .finally(() => setLoading(false));
   }, [selectedTeacher, activeTab]);
 
-  const currentSections = batches.find((b) => b.batch === selectedBatch)?.sections || [];
-  
+  const currentSections =
+    batches.find((b) => b.batch === selectedBatch)?.sections || [];
+
   // Filter search input
-  const filteredTeachers = teachers.filter((t) => 
-    t.toLowerCase().includes(teacherSearch.toLowerCase())
+  const filteredTeachers = teachers.filter((t) =>
+    t.toLowerCase().includes(teacherSearch.toLowerCase()),
   );
 
   return (
@@ -171,7 +191,9 @@ export default function RoutineManager() {
                 setSelectedSection("");
               }}
             >
-              <option value="" className="bg-slate-950">Select Batch</option>
+              <option value="" className="bg-slate-950">
+                Select Batch
+              </option>
               {batches.map((b) => (
                 <option key={b.batch} value={b.batch} className="bg-slate-950">
                   Batch {b.batch}
@@ -185,7 +207,9 @@ export default function RoutineManager() {
               onChange={(e) => setSelectedSection(e.target.value)}
               disabled={!selectedBatch}
             >
-              <option value="" className="bg-slate-950">Section</option>
+              <option value="" className="bg-slate-950">
+                Section
+              </option>
               {currentSections.map((sec) => (
                 <option key={sec} value={sec} className="bg-slate-950">
                   Section {sec}
@@ -213,11 +237,14 @@ export default function RoutineManager() {
                 }}
                 onFocus={() => setIsTeacherDropdownOpen(true)}
               />
-              <div 
+              <div
                 className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                 onClick={() => setIsTeacherDropdownOpen(!isTeacherDropdownOpen)}
               >
-                <ChevronDown size={16} className={`text-slate-500 transition-transform duration-200 ${isTeacherDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown
+                  size={16}
+                  className={`text-slate-500 transition-transform duration-200 ${isTeacherDropdownOpen ? "rotate-180" : ""}`}
+                />
               </div>
             </div>
 
@@ -230,8 +257,8 @@ export default function RoutineManager() {
                       <button
                         key={t}
                         className={`text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                          selectedTeacher === t 
-                            ? "bg-cyan-500/10 text-cyan-400 font-medium" 
+                          selectedTeacher === t
+                            ? "bg-cyan-500/10 text-cyan-400 font-medium"
                             : "text-slate-300 hover:bg-slate-800 hover:text-cyan-400"
                         }`}
                         onClick={() => {
@@ -258,18 +285,27 @@ export default function RoutineManager() {
       {loading && (
         <div className="flex flex-col items-center justify-center py-20 text-cyan-500 gap-4 relative z-10">
           <Loader2 className="animate-spin" size={32} />
-          <span className="text-sm text-slate-400 animate-pulse">Extracting Routine...</span>
+          <span className="text-sm text-slate-400 animate-pulse">
+            Extracting Routine...
+          </span>
         </div>
       )}
 
       {/* Data */}
       <div className="relative z-10">
         {!loading && activeTab === "student" && studentRoutine && (
-          <RoutineTable routineData={studentRoutine} batch={selectedBatch} section={selectedSection} />
+          <RoutineTable
+            routineData={studentRoutine}
+            batch={selectedBatch}
+            section={selectedSection}
+          />
         )}
 
         {!loading && activeTab === "teacher" && teacherRoutine && (
-          <TeacherRoutineTable routineData={teacherRoutine} teacher={teacherRoutine.teacher} />
+          <TeacherRoutineTable
+            routineData={teacherRoutine}
+            teacher={teacherRoutine.teacher}
+          />
         )}
       </div>
     </div>
