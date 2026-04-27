@@ -38,7 +38,7 @@ No account needed for students. The admin dashboard, protected by NextAuth crede
 | Events | Visual event gallery with registration links, deadlines, and types |
 | Curriculum Map | Interactive 12-semester course breakdown with prerequisites and resources |
 | Resources | Searchable and filterable library of PDFs, books, videos, and tools |
-| Routine | Dynamic class timetable, select your batch and section, download as PNG |
+| Routine | Dynamic class timetable with Student and Teacher tabs — students select batch and section, teachers see today's and full weekly schedule, download as PNG |
 | Question Bank | Searchable course archive with past exam files, question patterns, and evaluation breakdowns per course |
 | Admin Dashboard | Protected CRUD panel backed by Google Sheets |
 

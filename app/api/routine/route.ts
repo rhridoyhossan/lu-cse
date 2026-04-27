@@ -75,38 +75,43 @@ export async function POST(request: Request) {
     const targetSection = String(body.section).trim();
 
     if (!targetBatch || !targetSection) {
-      return NextResponse.json({ error: "Batch and section are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Batch and section are required" },
+        { status: 400 },
+      );
     }
 
     const data = await getRoutineData();
     const sundaySheet = data.valueRanges[0].values;
-    
-    // 1. Extract and clean the timeline headers
-    const rawTimelines = sundaySheet[0].slice(2); 
+
+    // Extract and clean the timeline headers
+    const rawTimelines = sundaySheet[0].slice(2);
     const cleanTimelines = rawTimelines.map((time: string) => {
       return String(time)
-        .replace(/\s*-\s*/g, '-') 
-        .replace(/\./g, ':');     
+        .replace(/\s*-\s*/g, "-")
+        .replace(/\./g, ":");
     });
 
-    // 2. Break Detection
+    // Break Detection
     const firstDataRow = sundaySheet[1] || [];
     const breakColIndex = firstDataRow.findIndex(
-      (cell: any) => typeof cell === 'string' && cell.toUpperCase().includes('BREAK')
+      (cell: any) =>
+        typeof cell === "string" && cell.toUpperCase().includes("BREAK"),
     );
-    
+
     const breakIndex = breakColIndex > -1 ? breakColIndex - 2 : -1;
 
     const weeklyRoutine: Record<string, any[]> = {};
 
-    // 3. Build the schedule
+    // Build the schedule
     data.valueRanges.forEach((rangeData: any, index: number) => {
       const dayName = DAYS[index];
       const rows = rangeData.values;
 
-      const targetRow = rows?.find((row: any[]) => 
-        String(row[0]).trim() === targetBatch && 
-        String(row[1]).trim() === targetSection
+      const targetRow = rows?.find(
+        (row: any[]) =>
+          String(row[0]).trim() === targetBatch &&
+          String(row[1]).trim() === targetSection,
       );
 
       weeklyRoutine[dayName] = cleanTimelines.map((time: string, i: number) => {
@@ -118,20 +123,22 @@ export async function POST(request: Request) {
 
         return {
           time,
-          subject: subject && subject.trim() !== "" ? subject.trim() : "-"
+          subject: subject && subject.trim() !== "" ? subject.trim() : "-",
         };
       });
     });
 
-    return NextResponse.json({ 
-      batch: targetBatch, 
-      section: targetSection, 
-      timelines: cleanTimelines,  
-      routine: weeklyRoutine 
+    return NextResponse.json({
+      batch: targetBatch,
+      section: targetSection,
+      timelines: cleanTimelines,
+      routine: weeklyRoutine,
     });
-
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

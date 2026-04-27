@@ -4,7 +4,8 @@ import { Calendar } from "lucide-react";
 
 export const metadata = {
   title: "Class Routine | LU CSE Campus_OS",
-  description: "View the latest class routine and timetable for Leading University CSE students in Sylhet. Stay on schedule with Campus_OS.",
+  description:
+    "View the latest class routine and timetable for Leading University CSE students in Sylhet. Stay on schedule with Campus_OS.",
 };
 
 export default function RoutinePage() {
@@ -18,7 +19,8 @@ export default function RoutinePage() {
           Class Routine
         </h1>
         <p className="text-slate-400 text-sm md:text-base animate-fade delay-200">
-          Select your batch and section to view the weekly schedule.
+          Select your batch and section, or search for a teacher to view the
+          weekly schedule.
         </p>
       </div>
 
