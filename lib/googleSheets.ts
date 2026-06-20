@@ -15,11 +15,11 @@ async function fetchSheetsActual() {
 
     const sheets = google.sheets({ version: "v4", auth });
 
-    const ranges = ["General!A2:G", "Events!A2:I", "Resources!A2:E"];
+    const ranges = ["General!A2:G", "Events!A2:I", "Resources!A2:E", "Data!A1:B"];
 
     const response = await sheets.spreadsheets.values.batchGet({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      ranges: ranges,
+        spreadsheetId: process.env.GOOGLE_SHEET_ID,
+        ranges: ranges,
     });
 
     const valueRanges = response.data.valueRanges || [];
@@ -41,6 +41,7 @@ async function fetchSheetsActual() {
       general: cleanData(valueRanges[0].values),
       events: cleanData(valueRanges[1].values),
       resources: cleanData(valueRanges[2].values),
+      data: cleanData(valueRanges[3].values),
       lastFetched: Date.now(),
     };
   } catch (error) {
@@ -53,7 +54,7 @@ export const getBatchData = unstable_cache(
   async () => fetchSheetsActual(),
   ["google-sheets-full-data"],
   {
-    revalidate: 60 * 5,
+    revalidate: 5,
     tags: ["sheets"],
   },
 );

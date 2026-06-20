@@ -4,6 +4,8 @@ import { Analytics } from "@vercel/analytics/next";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 import SmoothScrollProvider from "@/lib/SmoothScrollProvider";
+import { getBatchData } from "@/lib/googleSheets";
+import MaintenanceView from "@/components/MaintenanceView";
 
 const mono = JetBrains_Mono({ subsets: ["latin"] });
 
@@ -30,20 +32,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const db = await getBatchData();
+  const maintenanceMode =
+    db?.data?.find((row: any) => row[0] === "MAINTENANCE_MODE")?.[1] === "TRUE";
+
   return (
     <html lang="en" className="dark">
       <body
         className={`${mono.className} min-h-screen bg-slate-950 text-slate-200 antialiased flex flex-col`}
       >
-        <Navbar />
-        <div className="flex-1 flex flex-col">
-          <SmoothScrollProvider>{children}</SmoothScrollProvider>
-        </div>
+        {maintenanceMode ? (
+          <MaintenanceView />
+        ) : (
+          <>
+            <Navbar />
+            <div className="flex-1 flex flex-col">
+              <SmoothScrollProvider>{children}</SmoothScrollProvider>
+            </div>
+          </>
+        )}
         <Analytics />
       </body>
     </html>
