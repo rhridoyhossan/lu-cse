@@ -39,7 +39,7 @@ export default async function RootLayout({
 }) {
   const db = await getBatchData();
   const maintenanceMode =
-    db?.data?.find((row: any) => row[0] === "MAINTENANCE_MODE")?.[1] === "TRUE";
+    db?.data[1][1] === "TRUE"; // Second is MAINTENANCE_MODE
 
   return (
     <html lang="en" className="dark">

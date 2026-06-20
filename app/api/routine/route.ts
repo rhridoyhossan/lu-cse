@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getBatchData } from "@/lib/googleSheets";
 
 const DAYS = [
   "Sunday",
@@ -11,10 +12,13 @@ const DAYS = [
 ];
 
 async function getRoutineData() {
-  const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
-  const sheetId = process.env.STUDENT_ROUTINE_SHEET_ID;
+  const db = await getBatchData();
 
-  const ranges = DAYS.map((day) => `ranges=${day}!B2:J`).join("&");
+  const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
+  // const sheetId = process.env.STUDENT_ROUTINE_SHEET_ID;
+  const sheetId = db?.data[0][1]; // first one is STUDENT_ROUTINE_SHEET_ID
+
+  const ranges = DAYS.map((day) => `ranges=${day}!B2:K`).join("&");
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values:batchGet?${ranges}&key=${apiKey}`;
 
   const response = await fetch(url, { next: { revalidate: 3600 } });
