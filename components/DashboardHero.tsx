@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   Cloud,
   Zap,
-  Wifi,
+  FileQuestion,
   ArrowRight,
   Terminal,
   BookOpen,
@@ -227,24 +227,24 @@ export default function DashboardHero({
           </div>
         </Link>
 
-        {/* Events Card */}
+        {/* Question Bank Card */}
         <Link
-          href="/events"
+          href="/question-bank"
           className="notice-element opacity-0 group relative bg-slate-900/70 border border-slate-800 rounded-2xl p-6 hover:bg-slate-900 hover:border-purple-500/50 transition-colors"
         >
           <div className="relative z-10 h-full flex flex-col">
             <div className="w-10 h-10 rounded-lg bg-purple-950/30 border border-purple-500/30 text-purple-400 flex items-center justify-center mb-4">
-              <Wifi size={20} />
+              <FileQuestion size={20} />
             </div>
 
-            <h3 className="text-xl font-bold text-white mb-1">Event Horizon</h3>
+            <h3 className="text-xl font-bold text-white mb-1">Question Bank</h3>
             <p className="text-slate-500 text-sm mb-4">
-              Visual gallery of campus activities.
+              Explore past mid & final exam papers.
             </p>
 
             <div className="mt-auto pt-4 border-t border-slate-800/50">
               <div className="flex justify-between items-center text-xs text-purple-400 font-bold">
-                <span>VIEW_EVENTS()</span>
+                <span>GET_QUESTIONS()</span>
                 <ArrowRight
                   size={14}
                   className="group-hover:translate-x-1 transition-transform"
@@ -266,8 +266,11 @@ export default function DashboardHero({
             </div>
 
             <h3 className="text-xl font-bold text-white mb-1">Repository</h3>
-            <p className="text-slate-500 text-sm mb-4">
-              Check out the project on GitHub
+            <p className="text-slate-400 text-sm mb-4">
+              Developed by{" "}
+              <span className="text-cyan-400 font-semibold group-hover:underline">
+                RIDOY HOSSAN RONY
+              </span>
             </p>
 
             <div className="mt-auto pt-4 border-t border-slate-800/50">
