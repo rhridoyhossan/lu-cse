@@ -6,6 +6,7 @@ import "./globals.css";
 import SmoothScrollProvider from "@/lib/SmoothScrollProvider";
 import { getBatchData } from "@/lib/googleSheets";
 import MaintenanceView from "@/components/MaintenanceView";
+import NotificationPopup from "@/components/NotificationPopup";
 
 const mono = JetBrains_Mono({ subsets: ["latin"] });
 
@@ -38,8 +39,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const db = await getBatchData();
-  const maintenanceMode =
-    db?.data[1][1] === "TRUE"; // Second is MAINTENANCE_MODE
+  const maintenanceMode = db?.data?.[1]?.[1] === "TRUE";
+  const notifications = db?.notifications || [];
 
   return (
     <html lang="en" className="dark">
@@ -50,6 +51,7 @@ export default async function RootLayout({
           <MaintenanceView />
         ) : (
           <>
+            <NotificationPopup notifications={notifications} />
             <Navbar />
             <div className="flex-1 flex flex-col">
               <SmoothScrollProvider>{children}</SmoothScrollProvider>
