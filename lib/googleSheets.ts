@@ -1,6 +1,11 @@
 import { google } from "googleapis";
 import { unstable_cache } from "next/cache";
 
+export interface PageNotification {
+  slug: string;
+  html: string;
+}
+
 async function fetchSheetsActual() {
   try {
     const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
@@ -36,12 +41,21 @@ async function fetchSheetsActual() {
       });
     };
 
-    // Return the clean data structure
+    const rawData = cleanData(valueRanges[3]?.values);
+    const notifications: PageNotification[] = rawData
+      .slice(2, 4)
+      .map((row: any[]) => ({
+        slug: String(row[0] || "").trim(),
+        html: String(row[1] || "").trim(),
+      }))
+      .filter((item: PageNotification) => Boolean(item.slug && item.html));
+
     return {
-      general: cleanData(valueRanges[0].values),
-      events: cleanData(valueRanges[1].values),
-      resources: cleanData(valueRanges[2].values),
-      data: cleanData(valueRanges[3].values),
+      general: cleanData(valueRanges[0]?.values),
+      events: cleanData(valueRanges[1]?.values),
+      resources: cleanData(valueRanges[2]?.values),
+      data: rawData,
+      notifications,
       lastFetched: Date.now(),
     };
   } catch (error) {
