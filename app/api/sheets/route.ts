@@ -19,6 +19,16 @@ async function getSheetsClient() {
   return google.sheets({ version: "v4", auth: googleAuth });
 }
 
+function sanitizeSheetValue(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  const str = String(value);
+  // Neutralize formula triggers (=, +, -, @, tabs, carriage returns)
+  if (/^[=+\-@\t\r]/.test(str)) {
+    return `'${str}`;
+  }
+  return str;
+}
+
 export async function POST(request: Request) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -26,13 +36,16 @@ export async function POST(request: Request) {
   const { tab, formData } = await request.json();
   const columns = SHEET_COLUMNS[tab as keyof typeof SHEET_COLUMNS];
   
-  const rowValues = columns.map(col => col === "Added By" ? session?.user?.id : (formData[col] || ""));
+  const rowValues = columns.map(col => {
+    const rawVal = col === "Added By" ? session?.user?.id : (formData[col] || "");
+    return sanitizeSheetValue(rawVal);
+  });
 
   const sheets = await getSheetsClient();
   await sheets.spreadsheets.values.append({
     spreadsheetId: process.env.GOOGLE_SHEET_ID,
     range: `${tab}!A:Z`,
-    valueInputOption: "USER_ENTERED",
+    valueInputOption: "RAW",
     requestBody: { values: [rowValues] },
   });
 
@@ -46,13 +59,16 @@ export async function PUT(request: Request) {
   const { tab, rowIndex, formData } = await request.json();
   const columns = SHEET_COLUMNS[tab as keyof typeof SHEET_COLUMNS];
   
-  const rowValues = columns.map(col => col === "Added By" ? session?.user?.id : (formData[col] || ""));
+  const rowValues = columns.map(col => {
+    const rawVal = col === "Added By" ? session?.user?.id : (formData[col] || "");
+    return sanitizeSheetValue(rawVal);
+  });
 
   const sheets = await getSheetsClient();
   await sheets.spreadsheets.values.update({
     spreadsheetId: process.env.GOOGLE_SHEET_ID,
     range: `${tab}!A${rowIndex}:Z${rowIndex}`, 
-    valueInputOption: "USER_ENTERED",
+    valueInputOption: "RAW",
     requestBody: { values: [rowValues] },
   });
 
