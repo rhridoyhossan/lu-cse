@@ -62,7 +62,16 @@ export async function GET() {
     // Convert the Map values back into a standard array
     const availableClasses = Array.from(batchMap.values());
 
-    return NextResponse.json({ classes: availableClasses });
+    return NextResponse.json(
+      { classes: availableClasses },
+      {
+        status: 200,
+        headers: {
+          "Cache-Control":
+            "public, s-maxage=3600, stale-while-revalidate=86400",
+        },
+      },
+    );
   } catch (error) {
     return NextResponse.json(
       { error: "Internal Server Error" },

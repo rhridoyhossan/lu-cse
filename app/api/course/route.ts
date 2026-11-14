@@ -1,22 +1,16 @@
 import { NextResponse } from "next/server";
-import { google } from "googleapis";
+import { drive as driveFactory } from "@googleapis/drive";
+import { getGoogleAuth, GOOGLE_SCOPES } from "@/lib/google-auth";
 import { unstable_cache } from "next/cache";
 import { courseData } from "@/data/course";
 
 const getCachedDriveData = unstable_cache(
   async (code: string) => {
     const rootFolderId = process.env.DRIVE_FOLDER_ID?.trim();
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
-
-    const auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: privateKey,
-      },
-      scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+    const drive = driveFactory({
+      version: "v3",
+      auth: getGoogleAuth(GOOGLE_SCOPES.driveRead),
     });
-    
-    const drive = google.drive({ version: "v3", auth });
 
     // Get Details Parent Folder
     const courseSearch = await drive.files.list({
@@ -27,7 +21,7 @@ const getCachedDriveData = unstable_cache(
     const courseFolder = courseSearch.data.files?.[0];
 
     if (!courseFolder) {
-      return null; 
+      return null;
     }
 
     // Get Subfolders
@@ -56,7 +50,8 @@ const getCachedDriveData = unstable_cache(
             id: f.id,
             name: f.name,
             type: f.mimeType,
-            viewLink: f.webViewLink || `https://drive.google.com/file/d/${f.id}/view`,
+            viewLink:
+              f.webViewLink || `https://drive.google.com/file/d/${f.id}/view`,
           })),
         };
       }),
@@ -71,7 +66,7 @@ const getCachedDriveData = unstable_cache(
   {
     revalidate: 86400,
     tags: ["drive-data"],
-  }
+  },
 );
 
 export async function GET(req: Request) {
@@ -95,12 +90,20 @@ export async function GET(req: Request) {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      course: data.course,
-      subfolders: data.subfolders,
-    });
-    
+    return NextResponse.json(
+      {
+        success: true,
+        course: data.course,
+        subfolders: data.subfolders,
+      },
+      {
+        status: 200,
+        headers: {
+          "Cache-Control":
+            "public, s-maxage=86400, stale-while-revalidate=86400",
+        },
+      },
+    );
   } catch (error: any) {
     console.error("Drive API Error:", error.message);
     return NextResponse.json(

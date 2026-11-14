@@ -1,20 +1,16 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { google } from "googleapis";
+import { sheets as sheetsFactory } from "@googleapis/sheets";
+import { getGoogleAuth, GOOGLE_SCOPES } from "@/lib/google-auth";
 import { unstable_cache } from "next/cache";
 
 const getCachedUsers = unstable_cache(
   async () => {
     try {
-      const googleAuth = new google.auth.GoogleAuth({
-        credentials: {
-          client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-          private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-        },
-        scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+      const sheets = sheetsFactory({
+        version: "v4",
+        auth: getGoogleAuth(GOOGLE_SCOPES.sheetsRead),
       });
-
-      const sheets = google.sheets({ version: "v4", auth: googleAuth });
 
       const response = await sheets.spreadsheets.values.get({
         spreadsheetId: process.env.GOOGLE_SHEET_ID,
@@ -28,7 +24,7 @@ const getCachedUsers = unstable_cache(
     }
   },
   ["google-sheets-users-auth"],
-  { revalidate: 20 },
+  { revalidate: 300 },
 );
 
 export const { handlers, auth, signIn, signOut } = NextAuth({

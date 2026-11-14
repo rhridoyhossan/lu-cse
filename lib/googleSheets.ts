@@ -1,4 +1,5 @@
-import { google } from "googleapis";
+import { sheets as sheetsFactory } from "@googleapis/sheets";
+import { getGoogleAuth, GOOGLE_SCOPES } from "@/lib/google-auth";
 import { unstable_cache } from "next/cache";
 
 export interface PageNotification {
@@ -8,23 +9,21 @@ export interface PageNotification {
 
 async function fetchSheetsActual() {
   try {
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
-
-    const auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: privateKey,
-      },
-      scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+    const sheets = sheetsFactory({
+      version: "v4",
+      auth: getGoogleAuth(GOOGLE_SCOPES.sheetsRead),
     });
 
-    const sheets = google.sheets({ version: "v4", auth });
-
-    const ranges = ["General!A2:G", "Events!A2:I", "Resources!A2:E", "Data!A1:B"];
+    const ranges = [
+      "General!A2:G",
+      "Events!A2:I",
+      "Resources!A2:E",
+      "Data!A1:B",
+    ];
 
     const response = await sheets.spreadsheets.values.batchGet({
-        spreadsheetId: process.env.GOOGLE_SHEET_ID,
-        ranges: ranges,
+      spreadsheetId: process.env.GOOGLE_SHEET_ID,
+      ranges: ranges,
     });
 
     const valueRanges = response.data.valueRanges || [];
@@ -68,7 +67,7 @@ export const getBatchData = unstable_cache(
   async () => fetchSheetsActual(),
   ["google-sheets-full-data"],
   {
-    revalidate: 60 * 5,
+    revalidate: 60 * 10,
     tags: ["sheets"],
   },
 );

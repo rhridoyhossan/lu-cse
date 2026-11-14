@@ -22,35 +22,36 @@ High-throughput academic operations platform for Leading University Computer Sci
 
 ---
 
-## Value Proposition
-
-Campus_OS eliminates friction in university academic logistics for students and faculty:
-
-- **Instant Timetable Queries**: Real-time batch and section routine resolution with instructor schedule filtering and client-side schedule rendering.
-- **Unified Academic Stream**: Real-time academic notices, multi-semester curriculum graph navigation with prerequisite mapping, and searchable question banks.
-- **Zero-Friction Access Model**: Public routes require zero authentication or identity friction, while administrative mutation workflows are isolated behind authenticated session guards.
-
----
-
+## What It Provides
+ 
+Students and faculty, no login needed:
+- Batch, section and instructor routines
+- Live notices and resources
+- Curriculum with prerequisites
+- Searchable question bank
+Admins: a protected dashboard to publish updates, with routines still maintained in Google Sheets.
+ 
 ## Core Engineering Challenges
-
-### Treating Google Sheets as a Scalable Data Store
-Building an institution-scale application without a dedicated SQL/NoSQL database requires solving several distributed systems and data-integrity constraints:
-
-#### 1. Quota Throttling vs. Traffic Spikes
-* **Constraint:** The Google Sheets API enforces strict rate limits (60 read requests per minute per project). During class changeovers and examination periods, sudden concurrent student traffic would immediately exhaust Google Cloud quotas and return HTTP 429 errors.
-* **Engineering Solution:** Multi-tiered caching strategy combining Next.js App Router Incremental Static Regeneration (`unstable_cache` with tag-based invalidation) and orchestrated batch queries (`spreadsheets.values.batchGet`). Public traffic is served directly from edge cache memory, collapsing response latencies from ~600ms to sub-15ms and shielding the upstream Google API from high concurrency.
-
-#### 2. Multidimensional Grid Normalization (Routine Engine)
-* **Constraint:** Academic timetables are maintained by human faculty in irregular 2D spreadsheet matrices with merged cells, non-contiguous day sheets, and variable time slots across overlapping batch/section divisions.
-* **Engineering Solution:** A custom single-pass normalization pipeline in `app/api/routine` and `app/api/teacher-routine`. It extracts raw row-major arrays, dynamically indexes day/time coordinates, and constructs an in-memory graph (`Map<Batch, Section[]>`) in $O(N)$ time, allowing instant schedule lookups without expensive query scans.
-
-#### 3. Concurrency & Mutation Integrity without ACID Locks
-* **Constraint:** Google Sheets lacks row-level locking and transactional isolation. Direct mutations from multiple administrators risk race conditions and formula injection.
-* **Engineering Solution:** Deterministic row-index tracking (`_rowIndex`) paired with input sanitization that neutralizes spreadsheet formula triggers (`=`, `+`, `-`, `@`, `\t`, `\r`) and strictly commits all writes under `valueInputOption: "RAW"`.
-
-#### 4. Edge Network Proxy Boundary
-* **Architecture:** Utilizes Next.js 16's `proxy.ts` execution boundary for edge-level request interception, managing session validation, origin verification, and route isolation before downstream server components execute.
+ 
+### 1. Quota Throttling vs. Traffic Spikes
+- **Constraint:** The Google Sheets API enforces strict read quotas. Class changeovers and exam periods would exhaust them and return HTTP 429 errors.
+- **Engineering Solution:** Two-tier caching: Vercel Edge CDN (`s-maxage`) in front of Next.js `unstable_cache` with tag-based invalidation. All sheet reads are collapsed into one `spreadsheets.values.batchGet` call per cache window. Latency drops from ~600 ms to sub-15 ms, and the Google API is shielded from concurrency.
+### 2. Multidimensional Grid Normalization (Routine Engine)
+- **Constraint:** Timetables are edited by faculty as irregular 2D grids with merged cells, non-contiguous day sheets and variable time slots.
+- **Engineering Solution:** A single-pass normalization pipeline in `app/api/routine` and `app/api/teacher-routine`. It indexes day/time coordinates from raw row-major arrays and builds an in-memory `Map<Batch, Section[]>` in O(N), so lookups need no scans.
+### 3. Concurrency & Mutation Integrity without ACID Locks
+- **Constraint:** Sheets has no row-level locking or transactions. Concurrent admin edits risk race conditions and formula injection.
+- **Engineering Solution:** Deterministic row-index tracking (`_rowIndex`), input sanitization that neutralizes formula triggers (`=`, `+`, `-`, `@`, `\t`, `\r`), and all writes committed with `valueInputOption: "RAW"`.
+### 4. Selective Edge Proxy Boundary
+- **Constraint:** Middleware on every request wastes compute and adds latency to public pages.
+- **Engineering Solution:** `proxy.ts` runs only on `/dashboard`, `/login`, `/api/sheets` and `/api/upload`. Static assets and public routes skip it entirely. Protected handlers re-verify `req.auth` for defense in depth.
+### 5. Minimizing Vercel Active CPU
+- **Constraint:** Fluid compute bills for Active CPU time, so every function invocation costs money.
+- **Engineering Solution:** Requests are kept off functions wherever possible:
+  - `s-maxage` + stale-while-revalidate on API routes
+  - ISR (600 s) for public pages and SSG for 106 question-bank pages (`dynamicParams = false`)
+  - Static routine UI with client-side data fetching and filtering
+  - Scoped `@googleapis/*` packages instead of `googleapis`, cutting compile time from 22.9 s to 6.7 s
 
 ---
 

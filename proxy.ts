@@ -35,15 +35,24 @@ export const proxy = auth((req) => {
     }
   }
 
+  if (pathname.startsWith("/api/sheets") || pathname.startsWith("/api/upload")) {
+    if (!req.auth) {
+      return NextResponse.json(
+        { error: "Unauthorized: Session required" },
+        { status: 401 },
+      );
+    }
+  }
+
   if (pathname.startsWith("/dashboard")) {
     if (!req.auth) {
-      return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
+      return NextResponse.redirect(new URL("/login", req.nextUrl));
     }
   }
 
   if (pathname.startsWith("/login")) {
     if (req.auth) {
-      return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
+      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
     }
   }
 
@@ -52,6 +61,11 @@ export const proxy = auth((req) => {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|webp)$).*)",
+    "/dashboard/:path*",
+    "/login",
+    "/api/sheets",
+    "/api/sheets/:path*",
+    "/api/upload",
+    "/api/upload/:path*",
   ],
 };

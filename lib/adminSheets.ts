@@ -1,16 +1,12 @@
-import { google } from "googleapis";
+import { sheets as sheetsFactory } from "@googleapis/sheets";
+import { getGoogleAuth, GOOGLE_SCOPES } from "@/lib/google-auth";
 
 export async function fetchSheets() {
   try {
-    const googleAuth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-      },
-      scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+    const sheets = sheetsFactory({
+      version: "v4",
+      auth: getGoogleAuth(GOOGLE_SCOPES.sheetsRead),
     });
-
-    const sheets = google.sheets({ version: "v4", auth: googleAuth });
 
     const ranges = ["General!A1:G", "Events!A1:I", "Resources!A1:E"];
 

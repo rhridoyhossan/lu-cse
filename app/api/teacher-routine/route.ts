@@ -78,7 +78,16 @@ export async function GET() {
     });
 
     const teachers = Array.from(teacherSet).sort();
-    return NextResponse.json({ teachers });
+    return NextResponse.json(
+      { teachers },
+      {
+        status: 200,
+        headers: {
+          "Cache-Control":
+            "public, s-maxage=3600, stale-while-revalidate=86400",
+        },
+      },
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json(

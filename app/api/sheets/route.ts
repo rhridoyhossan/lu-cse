@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { google } from "googleapis";
+import { sheets as sheetsFactory } from "@googleapis/sheets";
+import { getGoogleAuth, GOOGLE_SCOPES } from "@/lib/google-auth";
 import { auth } from "@/auth";
+import { revalidateTag } from "next/cache";
 
 const SHEET_COLUMNS = {
   General: ["Title", "Image URL(Optional)", "Link(Optional)", "Added By"],
@@ -9,14 +11,10 @@ const SHEET_COLUMNS = {
 };
 
 async function getSheetsClient() {
-  const googleAuth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-    },
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  return sheetsFactory({
+    version: "v4",
+    auth: getGoogleAuth(GOOGLE_SCOPES.sheetsWrite),
   });
-  return google.sheets({ version: "v4", auth: googleAuth });
 }
 
 function sanitizeSheetValue(value: unknown): string {
@@ -49,6 +47,8 @@ export async function POST(request: Request) {
     requestBody: { values: [rowValues] },
   });
 
+  revalidateTag("sheets", { expire: 0 });
+
   return NextResponse.json({ success: true });
 }
 
@@ -72,6 +72,8 @@ export async function PUT(request: Request) {
     requestBody: { values: [rowValues] },
   });
 
+  revalidateTag("sheets", { expire: 0 });
+
   return NextResponse.json({ success: true });
 }
 
@@ -88,6 +90,8 @@ export async function DELETE(request: Request) {
     spreadsheetId: process.env.GOOGLE_SHEET_ID,
     range: `${tab}!A${rowIndex}:Z${rowIndex}`,
   });
+
+  revalidateTag("sheets", { expire: 0 });
 
   return NextResponse.json({ success: true });
 }
