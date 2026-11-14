@@ -53,7 +53,6 @@ export default function RoutineManager() {
   // Data State
   const [studentData, setStudentData] = useState<StudentRoutineResponse | null>(null);
   const [teacherData, setTeacherData] = useState<TeacherRoutineResponse | null>(null);
-  const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   // Student Selection State
@@ -66,6 +65,12 @@ export default function RoutineManager() {
   const [isTeacherDropdownOpen, setIsTeacherDropdownOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Derived loading state based on active tab data readiness
+  const loading =
+    !fetchError &&
+    ((activeTab === "student" && !studentData) ||
+      (activeTab === "teacher" && !teacherData));
 
   const handleTabChange = (tab: "student" | "teacher") => {
     router.push(`${pathname}?type=${tab}`, { scroll: false });
@@ -85,40 +90,52 @@ export default function RoutineManager() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Fetch Both Cached GET Endpoints on mount
+  // Fetch active tab's routine on demand (lazy loading)
   useEffect(() => {
     let isMounted = true;
 
-    Promise.all([
-      fetch("/api/routine").then(async (res) => {
-        if (!res.ok) throw new Error("Failed to load student routine data");
-        return res.json() as Promise<StudentRoutineResponse>;
-      }),
-      fetch("/api/teacher-routine").then(async (res) => {
-        if (!res.ok) throw new Error("Failed to load teacher routine data");
-        return res.json() as Promise<TeacherRoutineResponse>;
-      }),
-    ])
-      .then(([sData, tData]) => {
-        if (!isMounted) return;
-        setStudentData(sData);
-        setTeacherData(tData);
-      })
-      .catch((err) => {
-        if (!isMounted) return;
-        console.error(err);
-        setFetchError("Failed to load routine data. Please try again later.");
-      })
-      .finally(() => {
-        if (isMounted) {
-          setLoading(false);
-        }
-      });
+    if (activeTab === "student" && !studentData) {
+      fetch("/api/routine")
+        .then(async (res) => {
+          if (!res.ok) throw new Error("Failed to load student routine data");
+          return res.json() as Promise<StudentRoutineResponse>;
+        })
+        .then((sData) => {
+          if (isMounted) {
+            setStudentData(sData);
+            setFetchError(null);
+          }
+        })
+        .catch((err) => {
+          if (isMounted) {
+            console.error(err);
+            setFetchError("Failed to load student routine data. Please try again later.");
+          }
+        });
+    } else if (activeTab === "teacher" && !teacherData) {
+      fetch("/api/teacher-routine")
+        .then(async (res) => {
+          if (!res.ok) throw new Error("Failed to load teacher routine data");
+          return res.json() as Promise<TeacherRoutineResponse>;
+        })
+        .then((tData) => {
+          if (isMounted) {
+            setTeacherData(tData);
+            setFetchError(null);
+          }
+        })
+        .catch((err) => {
+          if (isMounted) {
+            console.error(err);
+            setFetchError("Failed to load teacher routine data. Please try again later.");
+          }
+        });
+    }
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [activeTab, studentData, teacherData]);
 
   const batches = studentData?.classes ?? [];
   const teachers = teacherData?.teachers ?? [];

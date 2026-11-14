@@ -30,6 +30,7 @@ const NotFound = () => {
         <div className="flex gap-4 justify-center relative">
           <Link
             href="/"
+            prefetch={false}
             className="group relative px-6 py-3 font-bold text-black bg-cyan-500 hover:bg-cyan-400 transition-all rounded-lg"
           >
             RETURN_HOME()

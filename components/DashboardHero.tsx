@@ -166,6 +166,7 @@ export default function DashboardHero({
         {/* Notices Card */}
         <Link
           href="/notices"
+          prefetch={false}
           className="notice-element opacity-0 group md:col-span-2 relative bg-slate-900/70 border border-slate-800 rounded-2xl p-6 hover:bg-slate-900 hover:border-cyan-500/50 transition-all duration-300 overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
@@ -202,6 +203,7 @@ export default function DashboardHero({
         {/* Curriculum Card */}
         <Link
           href="/curriculum"
+          prefetch={false}
           className="notice-element opacity-0 group relative bg-slate-900/70 border border-slate-800 rounded-2xl p-6 hover:bg-slate-900 hover:border-green-500/50 transition-colors"
         >
           <div className="relative z-10 h-full flex flex-col">
@@ -230,6 +232,7 @@ export default function DashboardHero({
         {/* Question Bank Card */}
         <Link
           href="/question-bank"
+          prefetch={false}
           className="notice-element opacity-0 group relative bg-slate-900/70 border border-slate-800 rounded-2xl p-6 hover:bg-slate-900 hover:border-purple-500/50 transition-colors"
         >
           <div className="relative z-10 h-full flex flex-col">
@@ -288,6 +291,7 @@ export default function DashboardHero({
         {/* Library Card */}
         <Link
           href="/resources"
+          prefetch={false}
           className="notice-element opacity-0 group relative bg-slate-900/70 border border-slate-800 rounded-2xl p-6 hover:bg-slate-900 hover:border-amber-500/50 transition-colors"
         >
           <div className="relative z-10 h-full flex flex-col">

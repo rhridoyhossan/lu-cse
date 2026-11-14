@@ -186,6 +186,7 @@ export default function QuestionBankPage() {
               <Link
                 key={course.course_code}
                 href={`/question-bank/${course.course_code.toLowerCase()}`}
+                prefetch={false}
                 className="course-card flex flex-col justify-between bg-slate-900/50 border border-slate-800 rounded-xl p-5 hover:bg-slate-900 hover:border-cyan-500/50 transition-all duration-300 group"
               >
                 <div>
@@ -218,8 +219,8 @@ export default function QuestionBankPage() {
         ) : (
           <div className="py-12 text-center border border-dashed border-slate-800 rounded-xl mt-4">
             <p className="text-slate-500 text-sm">
-              No systems matching "
-              <span className="text-slate-300">{searchTerm}</span>" found.
+              No systems matching &quot;
+              <span className="text-slate-300">{searchTerm}</span>&quot; found.
             </p>
           </div>
         )}

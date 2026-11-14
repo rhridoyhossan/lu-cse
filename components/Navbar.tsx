@@ -58,6 +58,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link
           href="/"
+          prefetch={false}
           className="nav-logo font-mono font-bold text-xl text-white"
         >
           Campus_<span className="text-cyan-500">OS</span>
@@ -71,6 +72,7 @@ const Navbar = () => {
             <Link
               key={link.href}
               href={link.href}
+              prefetch={false}
               className={`nav-link text-sm font-mono transition-colors ${
                 active
                   ? "text-cyan-400 border-b-2 border-cyan-500 pb-1"
@@ -153,6 +155,7 @@ const MobileMenu = ({
           <Link
             key={link.href}
             href={link.href}
+            prefetch={false}
             onClick={() => setIsOpen(false)}
             className={`mobile-link text-lg font-mono py-2 transition-colors flex items-center justify-between group ${
               active
