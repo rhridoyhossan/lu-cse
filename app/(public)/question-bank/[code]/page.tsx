@@ -37,5 +37,12 @@ export default async function CourseDetailsPage({
     console.error("Drive prefetch failed:", e);
   }
 
-  return <CourseDetailsClient courseCode={courseCode} course={course} initialData={initialData} />;
+  return (
+    <CourseDetailsClient
+      key={courseCode}
+      courseCode={courseCode}
+      course={course}
+      initialData={initialData}
+    />
+  );
 }

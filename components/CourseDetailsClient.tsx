@@ -42,22 +42,26 @@ interface CourseItem {
 export default function CourseDetailsClient({
   courseCode,
   course,
-  initialData
+  initialData,
 }: {
   courseCode: string;
   course: CourseItem;
   initialData: DriveCourseData | null | undefined;
 }) {
-  const [apiData, setApiData] = useState<ApiResponse | null | DriveCourseData>(initialData || null);
-  const [isLoading, setIsLoading] = useState(true);
+  const isSessional = !course || course.title.toLowerCase().includes("sessional");
+  const hasInitialData = initialData !== undefined;
+
+  const [apiData, setApiData] = useState<ApiResponse | null | DriveCourseData>(
+    initialData || null,
+  );
+  const [isLoading, setIsLoading] = useState(!hasInitialData && !isSessional);
 
   useEffect(() => {
-    if (!course || course.title.toLowerCase().includes("sessional")) {
-      setIsLoading(false);
+    if (isSessional || hasInitialData) {
       return;
     }
 
-    if (initialData !== undefined) return;
+    let isMounted = true;
 
     const fetchResources = async () => {
       try {
@@ -71,16 +75,24 @@ export default function CourseDetailsClient({
         if (!res.ok) throw new Error("Failed to fetch");
 
         const data = await res.json();
-        setApiData(data);
+        if (isMounted) {
+          setApiData(data);
+        }
       } catch (error) {
         console.error("API Fetch Error:", error);
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchResources();
-  }, [courseCode, course]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [courseCode, isSessional, hasInitialData]);
 
   const subfolders = apiData?.subfolders || [];
 

@@ -37,8 +37,9 @@ export async function GET(req: Request) {
         },
       },
     );
-  } catch (error: any) {
-    console.error("Drive API Error:", error.message);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Drive API Error:", message);
     return NextResponse.json(
       { success: false, error: "Failed to fetch Drive data" },
       { status: 500 },
