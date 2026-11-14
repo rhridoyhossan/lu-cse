@@ -8,7 +8,7 @@ export async function fetchSheets() {
       auth: getGoogleAuth(GOOGLE_SCOPES.sheetsRead),
     });
 
-    const ranges = ["General!A1:G", "Events!A1:I", "Resources!A1:E"];
+    const ranges = ["General!A1:G", "Resources!A1:E", "Data!A1:B"];
 
     const response = await sheets.spreadsheets.values.batchGet({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
@@ -30,13 +30,27 @@ export async function fetchSheets() {
       });
     };
 
+    const formatDataSheet = (sheetData: any[]) => {
+      if (!sheetData || sheetData.length === 0) return [];
+      return sheetData
+        .map((row, index) => {
+          if (!row || row.length === 0 || (!row[0] && !row[1])) return null;
+          return {
+            _rowIndex: index + 1,
+            Key: row[0] || "",
+            Value: row[1] || "",
+          };
+        })
+        .filter(Boolean);
+    };
+
     return {
       General: formatSheet(valueRanges[0]?.values || []),
-      Events: formatSheet(valueRanges[1]?.values || []),
-      Resources: formatSheet(valueRanges[2]?.values || []),
+      Resources: formatSheet(valueRanges[1]?.values || []),
+      Data: formatDataSheet(valueRanges[2]?.values || []),
     };
   } catch (error) {
     console.error("Google Sheets Fetch Failed:", error);
-    return { General: [], Events: [], Resources: [] };
+    return { General: [], Resources: [], Data: [] };
   }
 }

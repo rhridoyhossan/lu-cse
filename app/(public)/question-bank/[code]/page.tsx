@@ -1,6 +1,7 @@
 import { courseData } from "@/data/course";
 import { notFound } from "next/navigation";
 import CourseDetailsClient from "@/components/CourseDetailsClient";
+import { getCachedDriveData, type DriveCourseData } from "@/lib/drive";
 
 export const dynamicParams = false;
 
@@ -29,5 +30,12 @@ export default async function CourseDetailsPage({
     notFound();
   }
 
-  return <CourseDetailsClient courseCode={courseCode} course={course} />;
+  let initialData: DriveCourseData | null | undefined = undefined;
+  try {
+    initialData = await getCachedDriveData(courseCode);
+  } catch (e) {
+    console.error("Drive prefetch failed:", e);
+  }
+
+  return <CourseDetailsClient courseCode={courseCode} course={course} initialData={initialData} />;
 }

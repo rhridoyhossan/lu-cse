@@ -10,6 +10,7 @@ import {
   Terminal,
   ExternalLink,
 } from "lucide-react";
+import { DriveCourseData } from "@/lib/drive";
 
 interface FileData {
   id: string;
@@ -41,11 +42,13 @@ interface CourseItem {
 export default function CourseDetailsClient({
   courseCode,
   course,
+  initialData
 }: {
   courseCode: string;
   course: CourseItem;
+  initialData: DriveCourseData | null | undefined;
 }) {
-  const [apiData, setApiData] = useState<ApiResponse | null>(null);
+  const [apiData, setApiData] = useState<ApiResponse | null | DriveCourseData>(initialData || null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -53,6 +56,8 @@ export default function CourseDetailsClient({
       setIsLoading(false);
       return;
     }
+
+    if (initialData !== undefined) return;
 
     const fetchResources = async () => {
       try {

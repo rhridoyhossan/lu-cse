@@ -16,7 +16,6 @@ async function fetchSheetsActual() {
 
     const ranges = [
       "General!A2:G",
-      "Events!A2:I",
       "Resources!A2:E",
       "Data!A1:B",
     ];
@@ -40,7 +39,7 @@ async function fetchSheetsActual() {
       });
     };
 
-    const rawData = cleanData(valueRanges[3]?.values);
+    const rawData = cleanData(valueRanges[2]?.values);
     const notifications: PageNotification[] = rawData
       .slice(2, 4)
       .map((row: any[]) => ({
@@ -51,15 +50,14 @@ async function fetchSheetsActual() {
 
     return {
       general: cleanData(valueRanges[0]?.values),
-      events: cleanData(valueRanges[1]?.values),
-      resources: cleanData(valueRanges[2]?.values),
+      resources: cleanData(valueRanges[1]?.values),
       data: rawData,
       notifications,
       lastFetched: Date.now(),
     };
   } catch (error) {
     console.error("Google Sheets Fetch Failed:", error);
-    return null;
+    throw error;
   }
 }
 
@@ -67,7 +65,7 @@ export const getBatchData = unstable_cache(
   async () => fetchSheetsActual(),
   ["google-sheets-full-data"],
   {
-    revalidate: 60 * 10,
+    revalidate: 86400,
     tags: ["sheets"],
   },
 );

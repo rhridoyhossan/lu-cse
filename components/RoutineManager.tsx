@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import RoutineTable from "./RoutineTable";
 import TeacherRoutineTable from "./TeacherRoutineTable";
@@ -17,6 +17,31 @@ interface BatchData {
   sections: string[];
 }
 
+interface RoutineSlot {
+  time: string;
+  subject: string;
+}
+
+interface StudentRoutineResponse {
+  classes: BatchData[];
+  timelines: string[];
+  routines: Record<string, Record<string, RoutineSlot[]>>;
+}
+
+interface TeacherSlot {
+  time: string;
+  batch: string;
+  section: string;
+  subject: string;
+  room: string;
+}
+
+interface TeacherRoutineResponse {
+  teachers: string[];
+  allTimes: string[];
+  routines: Record<string, Record<string, TeacherSlot[]>>;
+}
+
 export default function RoutineManager() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -25,20 +50,21 @@ export default function RoutineManager() {
   const typeParam = searchParams.get("type");
   const activeTab = typeParam === "teacher" ? "teacher" : "student"; // Default student
 
-  // Student State
-  const [batches, setBatches] = useState<BatchData[]>([]);
+  // Data State
+  const [studentData, setStudentData] = useState<StudentRoutineResponse | null>(null);
+  const [teacherData, setTeacherData] = useState<TeacherRoutineResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
+  // Student Selection State
   const [selectedBatch, setSelectedBatch] = useState<string>("");
   const [selectedSection, setSelectedSection] = useState<string>("");
-  const [studentRoutine, setStudentRoutine] = useState<any>(null);
 
-  // Teacher State
-  const [teachers, setTeachers] = useState<string[]>([]);
+  // Teacher Selection State
   const [selectedTeacher, setSelectedTeacher] = useState<string>("");
   const [teacherSearch, setTeacherSearch] = useState<string>("");
   const [isTeacherDropdownOpen, setIsTeacherDropdownOpen] = useState(false);
-  const [teacherRoutine, setTeacherRoutine] = useState<any>(null);
 
-  const [loading, setLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleTabChange = (tab: "student" | "teacher") => {
@@ -59,90 +85,71 @@ export default function RoutineManager() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Fetch Both Api GET Requests
+  // Fetch Both Cached GET Endpoints on mount
   useEffect(() => {
-    fetch("/api/routine", {
-      headers: {
-        "x-internal-token": process.env.NEXT_PUBLIC_INTERNAL_API_SECRET || "",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.classes) setBatches(data.classes);
-      })
-      .catch(() => console.error("Failed to fetch batches"));
+    let isMounted = true;
 
-    fetch("/api/teacher-routine", {
-      headers: {
-        "x-internal-token": process.env.NEXT_PUBLIC_INTERNAL_API_SECRET || "",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.teachers) setTeachers(data.teachers);
+    Promise.all([
+      fetch("/api/routine").then(async (res) => {
+        if (!res.ok) throw new Error("Failed to load student routine data");
+        return res.json() as Promise<StudentRoutineResponse>;
+      }),
+      fetch("/api/teacher-routine").then(async (res) => {
+        if (!res.ok) throw new Error("Failed to load teacher routine data");
+        return res.json() as Promise<TeacherRoutineResponse>;
+      }),
+    ])
+      .then(([sData, tData]) => {
+        if (!isMounted) return;
+        setStudentData(sData);
+        setTeacherData(tData);
       })
-      .catch(() => console.error("Failed to fetch teachers list"));
+      .catch((err) => {
+        if (!isMounted) return;
+        console.error(err);
+        setFetchError("Failed to load routine data. Please try again later.");
+      })
+      .finally(() => {
+        if (isMounted) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  // Student Routine
-  useEffect(() => {
-    if (activeTab !== "student" || !selectedBatch || !selectedSection) {
-      setStudentRoutine(null);
-      return;
-    }
+  const batches = studentData?.classes ?? [];
+  const teachers = teacherData?.teachers ?? [];
 
-    setLoading(true);
+  // Reconstruct legacy response shape for selected student routine
+  const studentRoutine = useMemo(() => {
+    if (!selectedBatch || !selectedSection || !studentData?.routines) return null;
+    const routine = studentData.routines[`${selectedBatch}|${selectedSection}`];
+    if (!routine) return null;
+    return {
+      batch: selectedBatch,
+      section: selectedSection,
+      timelines: studentData.timelines,
+      routine,
+    };
+  }, [selectedBatch, selectedSection, studentData]);
 
-    fetch("/api/routine", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-internal-token": process.env.NEXT_PUBLIC_INTERNAL_API_SECRET || "",
-      },
-      body: JSON.stringify({ batch: selectedBatch, section: selectedSection }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setStudentRoutine(data);
-      })
-      .catch((err) => console.error("Failed to fetch student routine"))
-      .finally(() => setLoading(false));
-  }, [selectedBatch, selectedSection, activeTab]);
-
-  // Teacher Routine
-  useEffect(() => {
-    if (activeTab !== "teacher" || !selectedTeacher) {
-      setTeacherRoutine(null);
-      return;
-    }
-
-    setLoading(true);
-
-    fetch("/api/teacher-routine", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-internal-token": process.env.NEXT_PUBLIC_INTERNAL_API_SECRET || "",
-      },
-      body: JSON.stringify({ teacher: selectedTeacher }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) throw new Error(data.error);
-
-        const hasClasses = Object.values(data.routine).some(
-          (dayClasses: any) => dayClasses.length > 0,
-        );
-
-        if (!hasClasses) {
-          setTeacherRoutine(null);
-        } else {
-          setTeacherRoutine(data);
-        }
-      })
-      .catch((err) => console.error(err.message))
-      .finally(() => setLoading(false));
-  }, [selectedTeacher, activeTab]);
+  // Reconstruct legacy response shape for selected teacher routine
+  const teacherRoutine = useMemo(() => {
+    if (!selectedTeacher || !teacherData?.routines) return null;
+    const routine = teacherData.routines[selectedTeacher] ?? {};
+    const hasClasses = Object.values(routine).some(
+      (dayClasses) => dayClasses.length > 0,
+    );
+    if (!hasClasses) return null;
+    return {
+      teacher: selectedTeacher,
+      allTimes: teacherData.allTimes,
+      routine,
+    };
+  }, [selectedTeacher, teacherData]);
 
   const currentSections =
     batches.find((b) => b.batch === selectedBatch)?.sections || [];
@@ -282,11 +289,17 @@ export default function RoutineManager() {
         )}
       </div>
 
+      {fetchError && (
+        <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+          {fetchError}
+        </div>
+      )}
+
       {loading && (
         <div className="flex flex-col items-center justify-center py-20 text-cyan-500 gap-4 relative z-10">
           <Loader2 className="animate-spin" size={32} />
           <span className="text-sm text-slate-400 animate-pulse">
-            Extracting Routine...
+            Loading Routine Data...
           </span>
         </div>
       )}

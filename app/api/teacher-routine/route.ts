@@ -1,38 +1,23 @@
+import { DAYS, getRoutineData } from "@/lib/routineSheet";
 import { NextResponse } from "next/server";
-import { getBatchData } from "@/lib/googleSheets";
+import { unstable_cache } from "next/cache";
 
-const DAYS = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
-async function getRoutineData() {
-  const db = await getBatchData();
-
-  const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
-  // const sheetId = process.env.STUDENT_ROUTINE_SHEET_ID;
-  const sheetId = db?.data[0][1]; // first one is STUDENT_ROUTINE_SHEET_ID
-
-  const ranges = DAYS.map((day) => `ranges=${day}!B2:K`).join("&");
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values:batchGet?${ranges}&key=${apiKey}`;
-
-  const response = await fetch(url, { next: { revalidate: 3600 } });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch data from Google Sheets");
-  }
-
-  return response.json();
+interface TeacherSlot {
+  time: string;
+  batch: string;
+  section: string;
+  subject: string;
+  room: string;
 }
 
-// GET Request: list of all unique teacher acronyms
-export async function GET() {
-  try {
+interface TeacherRoutineIndexData {
+  teachers: string[];
+  allTimes: string[];
+  routines: Record<string, Record<string, TeacherSlot[]>>;
+}
+
+const getCachedTeacherRoutineIndex = unstable_cache(
+  async (): Promise<TeacherRoutineIndexData> => {
     const data = await getRoutineData();
     const teacherSet = new Set<string>();
     const excludeList = [
@@ -48,7 +33,8 @@ export async function GET() {
       "NL",
     ];
 
-    data.valueRanges.forEach((rangeData: any) => {
+    // Pass 1: Build teacherSet
+    data.valueRanges?.forEach((rangeData) => {
       const rows = rangeData.values || [];
 
       for (let r = 1; r < rows.length; r++) {
@@ -78,63 +64,40 @@ export async function GET() {
     });
 
     const teachers = Array.from(teacherSet).sort();
-    return NextResponse.json(
-      { teachers },
-      {
-        status: 200,
-        headers: {
-          "Cache-Control":
-            "public, s-maxage=3600, stale-while-revalidate=86400",
-        },
-      },
-    );
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
-  }
-}
 
-// POST Request
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const targetTeacher = String(body.teacher).trim().toUpperCase();
-
-    if (!targetTeacher) {
-      return NextResponse.json(
-        { error: "Teacher acronym is required" },
-        { status: 400 },
-      );
-    }
-
-    const data = await getRoutineData();
-    const sundaySheet = data.valueRanges[0].values;
-
-    const rawTimelines = sundaySheet[0].slice(2);
-    const cleanTimelines = rawTimelines.map((time: string) => {
-      return String(time)
+    const sundaySheet = data.valueRanges?.[0]?.values || [];
+    const rawTimelines = sundaySheet[0]?.slice(2) || [];
+    const allTimes = rawTimelines.map((time: string) =>
+      String(time)
         .replace(/\s*-\s*/g, "-")
-        .replace(/\./g, ":");
-    });
+        .replace(/\./g, ":"),
+    );
 
     const firstDataRow = sundaySheet[1] || [];
     const breakColIndex = firstDataRow.findIndex(
-      (cell: any) =>
-        typeof cell === "string" && cell.toUpperCase().includes("BREAK"),
+      (cell) => typeof cell === "string" && cell.toUpperCase().includes("BREAK"),
     );
     const breakIndex = breakColIndex > -1 ? breakColIndex - 2 : -1;
 
-    const weeklyRoutine: Record<string, any[]> = {};
-    let teacherHasClasses = false;
+    // Pass 2: Fill routines in one walk
+    const tempRoutines: Record<
+      string,
+      Record<string, Array<TeacherSlot & { timeIndex: number }>>
+    > = {};
+    const teacherHasClassesMap = new Map<string, boolean>();
 
-    // Schedule Build
-    data.valueRanges.forEach((rangeData: any, index: number) => {
+    for (const t of teachers) {
+      tempRoutines[t] = {};
+      teacherHasClassesMap.set(t, false);
+      for (const day of DAYS) {
+        tempRoutines[t][day] = [];
+      }
+    }
+
+    data.valueRanges?.forEach((rangeData, index) => {
       const dayName = DAYS[index];
+      if (!dayName) return;
       const rows = rangeData.values || [];
-      weeklyRoutine[dayName] = [];
 
       for (let r = 1; r < rows.length; r++) {
         const row = rows[r];
@@ -142,70 +105,99 @@ export async function POST(request: Request) {
         const section = row[1];
 
         if (!batch && !section) continue;
+
+        const batchUpper = String(batch || "").toUpperCase();
         if (
-          batch.toUpperCase().includes("STUDENT NO") ||
-          batch.toUpperCase().includes("BUS TIME")
-        )
+          batchUpper.includes("STUDENT NO") ||
+          batchUpper.includes("BUS TIME")
+        ) {
           continue;
+        }
 
         for (let c = 2; c < row.length; c++) {
           const cellValue = String(row[c] || "").trim();
 
-          if (cellValue && !cellValue.toUpperCase().includes("BREAK")) {
-            const parts = cellValue
-              .replace(/,/g, " ")
-              .split(/\s+/)
-              .filter(Boolean);
-            const teacherIndex = parts.findIndex(
-              (part) => part.toUpperCase() === targetTeacher,
-            );
+          if (!cellValue || cellValue.toUpperCase().includes("BREAK")) continue;
 
-            if (teacherIndex !== -1) {
-              teacherHasClasses = true;
-              weeklyRoutine[dayName].push({
-                time: cleanTimelines[c - 2],
-                timeIndex: c - 2,
+          const parts = cellValue
+            .replace(/,/g, " ")
+            .split(/\s+/)
+            .filter(Boolean);
+
+          const timeIndex = c - 2;
+          const time = allTimes[timeIndex];
+          if (!time) continue;
+
+          const seenTeachers = new Set<string>();
+          for (let i = 0; i < parts.length; i++) {
+            const partUpper = parts[i].toUpperCase();
+            if (teacherSet.has(partUpper) && !seenTeachers.has(partUpper)) {
+              seenTeachers.add(partUpper);
+              teacherHasClassesMap.set(partUpper, true);
+              tempRoutines[partUpper][dayName].push({
+                time,
+                timeIndex,
                 batch: batch || "-",
                 section: section || "-",
-                subject: parts.slice(0, teacherIndex).join(" ") || parts[0],
-                room: parts.slice(teacherIndex + 1).join(" ") || "-",
+                subject: parts.slice(0, i).join(" ") || parts[0],
+                room: parts.slice(i + 1).join(" ") || "-",
               });
             }
           }
         }
       }
-
-      if (breakIndex !== -1) {
-        weeklyRoutine[dayName].push({
-          time: cleanTimelines[breakIndex],
-          timeIndex: breakIndex,
-          subject: "Break",
-          batch: "",
-          section: "",
-          room: "",
-        });
-      }
-
-      // Sort chronological
-      weeklyRoutine[dayName].sort((a, b) => a.timeIndex - b.timeIndex);
-      weeklyRoutine[dayName] = weeklyRoutine[dayName].map(
-        ({ timeIndex, ...rest }) => rest,
-      );
     });
 
-    if (!teacherHasClasses) {
-      return NextResponse.json({
-        teacher: targetTeacher,
-        routine: {},
-        allTimes: cleanTimelines,
-      });
+    const routines: Record<string, Record<string, TeacherSlot[]>> = {};
+
+    for (const t of teachers) {
+      if (!teacherHasClassesMap.get(t)) {
+        routines[t] = {};
+        continue;
+      }
+
+      routines[t] = {};
+      for (const day of DAYS) {
+        const daySlots = [...tempRoutines[t][day]];
+
+        if (breakIndex !== -1 && breakIndex < allTimes.length) {
+          daySlots.push({
+            time: allTimes[breakIndex],
+            timeIndex: breakIndex,
+            subject: "Break",
+            batch: "",
+            section: "",
+            room: "",
+          });
+        }
+
+        daySlots.sort((a, b) => a.timeIndex - b.timeIndex);
+        routines[t][day] = daySlots.map((slot) => ({
+          time: slot.time,
+          batch: slot.batch,
+          section: slot.section,
+          subject: slot.subject,
+          room: slot.room,
+        }));
+      }
     }
 
-    return NextResponse.json({
-      teacher: targetTeacher,
-      routine: weeklyRoutine,
-      allTimes: cleanTimelines,
-      // data,
+    return { teachers, allTimes, routines };
+  },
+  ["teacher-routine-index"],
+  { revalidate: 3600 },
+);
+
+export async function GET() {
+  try {
+    const result = await getCachedTeacherRoutineIndex();
+
+    return NextResponse.json(result, {
+      status: 200,
+      headers: {
+        "Cache-Control":
+          "public, s-maxage=3600, stale-while-revalidate=86400",
+      },
     });
   } catch (error) {
     console.error(error);

@@ -6,8 +6,8 @@ import { revalidateTag } from "next/cache";
 
 const SHEET_COLUMNS = {
   General: ["Title", "Image URL(Optional)", "Link(Optional)", "Added By"],
-  Events: ["Title", "Description", "Type", "Event Date", "Register Deadline", "Image URL(Optional)", "Link", "Location", "Added By"],
   Resources: ["Title", "Format", "Tags", "Link", "Added By"],
+  Data: ["Key", "Value"],
 };
 
 async function getSheetsClient() {
@@ -65,6 +65,22 @@ export async function PUT(request: Request) {
   });
 
   const sheets = await getSheetsClient();
+
+  if (tab !== "Data") {
+    const existing = await sheets.spreadsheets.values.get({
+      spreadsheetId: process.env.GOOGLE_SHEET_ID,
+      range: `${tab}!A${rowIndex}:Z${rowIndex}`,
+    });
+    const existingRow = existing.data.values?.[0] || [];
+    const addedByIndex = columns.indexOf("Added By");
+    if (addedByIndex !== -1 && existingRow[addedByIndex] && existingRow[addedByIndex] !== session.user.id) {
+      return NextResponse.json(
+        { error: "Forbidden: You can only modify your own entries" },
+        { status: 403 }
+      );
+    }
+  }
+
   await sheets.spreadsheets.values.update({
     spreadsheetId: process.env.GOOGLE_SHEET_ID,
     range: `${tab}!A${rowIndex}:Z${rowIndex}`, 
@@ -86,6 +102,23 @@ export async function DELETE(request: Request) {
   const rowIndex = searchParams.get("rowIndex");
 
   const sheets = await getSheetsClient();
+
+  if (tab !== "Data") {
+    const columns = SHEET_COLUMNS[tab as keyof typeof SHEET_COLUMNS];
+    const existing = await sheets.spreadsheets.values.get({
+      spreadsheetId: process.env.GOOGLE_SHEET_ID,
+      range: `${tab}!A${rowIndex}:Z${rowIndex}`,
+    });
+    const existingRow = existing.data.values?.[0] || [];
+    const addedByIndex = columns ? columns.indexOf("Added By") : -1;
+    if (addedByIndex !== -1 && existingRow[addedByIndex] && existingRow[addedByIndex] !== session.user.id) {
+      return NextResponse.json(
+        { error: "Forbidden: You can only delete your own entries" },
+        { status: 403 }
+      );
+    }
+  }
+
   await sheets.spreadsheets.values.clear({
     spreadsheetId: process.env.GOOGLE_SHEET_ID,
     range: `${tab}!A${rowIndex}:Z${rowIndex}`,

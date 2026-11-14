@@ -3,31 +3,36 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { Terminal, Shield, Database, Calendar, BookOpen, List, User, Plus, Edit2, Trash2, Save, UploadCloud, Link as LinkIcon, LogOut } from "lucide-react";
+import {
+  Terminal,
+  Shield,
+  Database,
+  BookOpen,
+  List,
+  User,
+  Plus,
+  Edit2,
+  Trash2,
+  Save,
+  UploadCloud,
+  Link as LinkIcon,
+  LogOut,
+} from "lucide-react";
 
-const SHEET_CATEGORIES = ["General", "Events", "Resources"] as const;
+const SHEET_CATEGORIES = ["General", "Resources", "Data"] as const;
 type Category = (typeof SHEET_CATEGORIES)[number];
 type ViewMode = "All" | "Mine" | "Add" | "Edit";
 
-const SHEET_COLUMNS = {
+const SHEET_COLUMNS: Record<Category, string[]> = {
   General: ["Title", "Image URL(Optional)", "Link(Optional)"],
-  Events: [
-    "Title",
-    "Description",
-    "Type",
-    "Event Date",
-    "Register Deadline",
-    "Image URL(Optional)",
-    "Link",
-    "Location",
-  ],
   Resources: ["Title", "Format", "Tags", "Link"],
+  Data: ["Key", "Value"],
 };
 
 const CategoryIcons = {
   General: Database,
-  Events: Calendar,
   Resources: BookOpen,
+  Data: Terminal,
 };
 
 export default function ClientDashboard({
@@ -46,8 +51,15 @@ export default function ClientDashboard({
   const [imageUrl, setImageUrl] = useState("");
 
   const currentData = initialData[activeCategory] || [];
-  const myData = currentData.filter((row: any) => row["Added By"] === currentUser && row.Title);
-  const displayData = viewMode === "Mine" ? myData : currentData.filter((row: any) => row.Title);
+  const myData = currentData.filter(
+    (row: any) =>
+      (activeCategory === "Data" || row["Added By"] === currentUser) &&
+      (row.Title || row.Key),
+  );
+  const displayData =
+    viewMode === "Mine"
+      ? myData
+      : currentData.filter((row: any) => row.Title || row.Key);
 
   useEffect(() => {
     if (viewMode === "Edit" && editingRow) {
@@ -109,7 +121,7 @@ export default function ClientDashboard({
       dataObj[key] = value.toString();
     });
 
-    if (activeCategory !== "Resources") {
+    if (activeCategory === "General") {
       dataObj["Image URL(Optional)"] = imageUrl;
     }
 
@@ -122,6 +134,9 @@ export default function ClientDashboard({
           formData: dataObj,
           rowIndex: isEdit ? editingRow._rowIndex : undefined,
         }),
+        headers: {
+          "x-internal-token": process.env.NEXT_PUBLIC_INTERNAL_API_SECRET || "",
+        },
       });
 
       if (!res.ok) throw new Error("Failed to save via API");
@@ -229,10 +244,10 @@ export default function ClientDashboard({
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="cursor-pointer flex items-center gap-2 md:gap-3 px-3 md:px-4 py-3 md:mt-auto rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap text-red-500 hover:bg-red-950/40 border border-transparent hover:border-red-500/30 hover:text-red-400"
-        >
-          <LogOut size={14} className="shrink-0" />
-          Logout()
-        </button>
+          >
+            <LogOut size={14} className="shrink-0" />
+            Logout()
+          </button>
         </nav>
       </aside>
 
@@ -347,8 +362,8 @@ export default function ClientDashboard({
                             {isUploading && (
                               <p className="flex items-center gap-2 text-xs text-cyan-400 animate-pulse font-bold tracking-widest">
                                 <span className="relative flex h-2 w-2">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"/>
-                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"/>
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
                                 </span>
                                 UPLOADING_TO_SERVER...
                               </p>
@@ -408,6 +423,32 @@ export default function ClientDashboard({
                     );
                   }
 
+                  if (activeCategory === "Data" && column === "Value") {
+                    return (
+                      <div
+                        key={column}
+                        className="space-y-2 group col-span-1 md:col-span-2"
+                      >
+                        <label className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest group-focus-within:text-cyan-400 transition-colors">
+                          {cleanLabel} (Value, Sheet ID, TRUE/FALSE, or HTML
+                          Notification){" "}
+                          {!isOptional && (
+                            <span className="text-cyan-500">*</span>
+                          )}
+                        </label>
+                        <textarea
+                          name={column}
+                          required={!isOptional}
+                          defaultValue={defaultValue}
+                          rows={4}
+                          autoComplete="off"
+                          placeholder="Enter value, sheet ID, TRUE/FALSE, or HTML notification (e.g. <b>Notice</b><br/><a href='...'>Link</a>)..."
+                          className="w-full rounded-xl bg-slate-950/80 border border-slate-800 px-4 py-3 text-sm text-slate-200 outline-none focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/50 transition-all placeholder:text-slate-700 font-mono"
+                        />
+                      </div>
+                    );
+                  }
+
                   return (
                     <div key={column} className="space-y-2 group">
                       <label className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest group-focus-within:text-cyan-400 transition-colors">
@@ -422,7 +463,11 @@ export default function ClientDashboard({
                         required={!isOptional}
                         defaultValue={defaultValue}
                         autoComplete="off"
-                        placeholder={`Enter ${cleanLabel.toLowerCase()}...`}
+                        placeholder={
+                          activeCategory === "Data" && column === "Key"
+                            ? "e.g. STUDENT_ROUTINE_SHEET_ID, MAINTENANCE_MODE, /question-bank, /"
+                            : `Enter ${cleanLabel.toLowerCase()}...`
+                        }
                         className="w-full rounded-xl bg-slate-950/80 border border-slate-800 px-4 py-3 text-sm text-slate-200 outline-none focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/50 transition-all placeholder:text-slate-700"
                       />
                     </div>
@@ -490,7 +535,7 @@ export default function ClientDashboard({
                     )}
                   </tr>
                 </thead>
-                
+
                 <tbody className="divide-y divide-slate-800/50">
                   {displayData.map((row: any, i: number) => (
                     <tr
@@ -539,7 +584,6 @@ export default function ClientDashboard({
                           </button>
                         </td>
                       )}
-
                     </tr>
                   ))}
                 </tbody>

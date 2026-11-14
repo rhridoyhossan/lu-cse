@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import "./globals.css";
 import SmoothScrollProvider from "@/lib/SmoothScrollProvider";
 import { getBatchData } from "@/lib/googleSheets";
-import MaintenanceView from "@/components/MaintenanceView";
+import MaintenanceGuard from "@/components/MaintenanceGuard";
 import NotificationPopup from "@/components/NotificationPopup";
 
 const mono = JetBrains_Mono({ subsets: ["latin"] });
@@ -47,17 +47,13 @@ export default async function RootLayout({
       <body
         className={`${mono.className} min-h-screen bg-slate-950 text-slate-200 antialiased flex flex-col`}
       >
-        {maintenanceMode ? (
-          <MaintenanceView />
-        ) : (
-          <>
-            <NotificationPopup notifications={notifications} />
-            <Navbar />
-            <div className="flex-1 flex flex-col">
-              <SmoothScrollProvider>{children}</SmoothScrollProvider>
-            </div>
-          </>
-        )}
+        <MaintenanceGuard maintenanceMode={maintenanceMode}>
+          <NotificationPopup notifications={notifications} />
+          <Navbar />
+          <div className="flex-1 flex flex-col">
+            <SmoothScrollProvider>{children}</SmoothScrollProvider>
+          </div>
+        </MaintenanceGuard>
         <Analytics />
       </body>
     </html>
