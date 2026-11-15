@@ -113,7 +113,7 @@ const getCachedRoutineIndex = unstable_cache(
     return { classes, timelines, routines };
   },
   ["routine-index"],
-  { revalidate: 3600 },
+  { revalidate: 3600, tags: ["routine-data"] },
 );
 
 export async function GET() {

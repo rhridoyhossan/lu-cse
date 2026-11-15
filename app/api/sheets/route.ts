@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { sheets as sheetsFactory } from "@googleapis/sheets";
 import { getGoogleAuth, GOOGLE_SCOPES } from "@/lib/google-auth";
 import { auth } from "@/auth";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 const SHEET_COLUMNS = {
   General: ["Title", "Image URL(Optional)", "Link(Optional)", "Added By"],
@@ -15,6 +15,12 @@ async function getSheetsClient() {
     version: "v4",
     auth: getGoogleAuth(GOOGLE_SCOPES.sheetsWrite),
   });
+}
+
+function revalidateSheetPaths() {
+  revalidatePath("/", "layout");
+  revalidatePath("/api/routine");
+  revalidatePath("/api/teacher-routine");
 }
 
 function sanitizeSheetValue(value: unknown): string {
@@ -48,6 +54,8 @@ export async function POST(request: Request) {
   });
 
   revalidateTag("sheets", { expire: 0 });
+  revalidateTag("routine-data", { expire: 0 });
+  revalidateSheetPaths();
 
   return NextResponse.json({ success: true });
 }
@@ -89,6 +97,8 @@ export async function PUT(request: Request) {
   });
 
   revalidateTag("sheets", { expire: 0 });
+  revalidateTag("routine-data", { expire: 0 });
+  revalidateSheetPaths();
 
   return NextResponse.json({ success: true });
 }
@@ -125,6 +135,8 @@ export async function DELETE(request: Request) {
   });
 
   revalidateTag("sheets", { expire: 0 });
+  revalidateTag("routine-data", { expire: 0 });
+  revalidateSheetPaths();
 
   return NextResponse.json({ success: true });
 }

@@ -185,7 +185,7 @@ const getCachedTeacherRoutineIndex = unstable_cache(
     return { teachers, allTimes, routines };
   },
   ["teacher-routine-index"],
-  { revalidate: 3600 },
+  { revalidate: 3600, tags: ["routine-data"] },
 );
 
 export async function GET() {
