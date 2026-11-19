@@ -65,7 +65,7 @@ export const getBatchData = unstable_cache(
   async () => fetchSheetsActual(),
   ["google-sheets-full-data"],
   {
-    revalidate: 86400 * 7,
+    revalidate: 86400 * 30,
     tags: ["sheets"],
   },
 );

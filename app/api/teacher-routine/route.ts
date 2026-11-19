@@ -185,7 +185,7 @@ const getCachedTeacherRoutineIndex = unstable_cache(
     return { teachers, allTimes, routines };
   },
   ["teacher-routine-index"],
-  { revalidate: 3600, tags: ["routine-data"] },
+  { revalidate: 86400 * 30, tags: ["routine-data"] },
 );
 
 export async function GET() {
@@ -196,7 +196,7 @@ export async function GET() {
       status: 200,
       headers: {
         "Cache-Control":
-          "public, s-maxage=3600, stale-while-revalidate=86400",
+          "public, s-maxage=2592000, stale-while-revalidate=86400",
       },
     });
   } catch (error) {

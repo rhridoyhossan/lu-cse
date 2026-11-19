@@ -33,7 +33,7 @@ export async function getRoutineData(): Promise<RoutineSheetResponse> {
   const ranges = DAYS.map((day) => `ranges=${day}!B2:K`).join("&");
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values:batchGet?${ranges}&key=${apiKey}`;
 
-  const response = await fetch(url, { next: { revalidate: 3600, tags: ["routine-data"] } });
+  const response = await fetch(url, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error("Failed to fetch data from Google Sheets");

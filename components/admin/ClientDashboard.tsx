@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
@@ -17,7 +17,13 @@ import {
   UploadCloud,
   Link as LinkIcon,
   LogOut,
+  RefreshCw,
 } from "lucide-react";
+import { courseData } from "@/data/course";
+
+const theoryCourses = courseData.filter(
+  (c) => !c.title.toLowerCase().includes("sessional"),
+);
 
 const SHEET_CATEGORIES = ["General", "Resources", "Data"] as const;
 type Category = (typeof SHEET_CATEGORIES)[number];
@@ -49,6 +55,24 @@ export default function ClientDashboard({
   const [uploadMode, setUploadMode] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
+
+  const [selectedCourse, setSelectedCourse] = useState(
+    theoryCourses[0]?.course_code || "CSE-1101",
+  );
+  const [syncingTarget, setSyncingTarget] = useState<"routine" | "drive" | null>(
+    null,
+  );
+  const [syncMessage, setSyncMessage] = useState<{
+    type: "ok" | "err";
+    text: string;
+  } | null>(null);
+  const syncTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
+    };
+  }, []);
 
   const currentData = initialData[activeCategory] || [];
   const myData = currentData.filter(
@@ -173,6 +197,38 @@ export default function ClientDashboard({
     setViewMode("Edit");
   };
 
+  const handleCacheSync = async (target: "routine" | "drive") => {
+    if (syncingTarget) return;
+    setSyncingTarget(target);
+    setSyncMessage(null);
+    if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
+
+    try {
+      const res = await apiFetch("/api/sheets", {
+        method: "PATCH",
+        body: JSON.stringify({
+          target,
+          courseCode: target === "drive" ? selectedCourse : undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Sync failed");
+
+      setSyncMessage({
+        type: "ok",
+        text: data.message || "Cache revalidated",
+      });
+    } catch (error) {
+      setSyncMessage({
+        type: "err",
+        text: error instanceof Error ? error.message : "Cache sync failed",
+      });
+    } finally {
+      setSyncingTarget(null);
+      syncTimeoutRef.current = setTimeout(() => setSyncMessage(null), 4000);
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row flex-1 bg-slate-950 text-slate-200 font-mono overflow-hidden relative">
       <div className="absolute top-0 right-0 w-160 h-160 bg-cyan-900/10 blur-[120px] rounded-full pointer-events-none" />
@@ -241,14 +297,89 @@ export default function ClientDashboard({
               </button>
             );
           })}
+        </nav>
+
+        <div className="p-3 md:px-4 md:py-3 border-t border-slate-800/80 space-y-2.5">
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            Cache Sync
+          </p>
+
           <button
+            type="button"
+            onClick={() => handleCacheSync("routine")}
+            disabled={syncingTarget !== null}
+            className="cursor-pointer w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all bg-slate-950/80 border border-slate-800 text-cyan-400 hover:bg-cyan-950/40 hover:border-cyan-500/40 disabled:opacity-50"
+          >
+            <span>Sync Routine</span>
+            <RefreshCw
+              size={13}
+              className={
+                syncingTarget === "routine"
+                  ? "animate-spin shrink-0"
+                  : "shrink-0"
+              }
+            />
+          </button>
+
+          <div className="space-y-1.5 pt-1">
+            <select
+              aria-label="Select course for Drive sync"
+              value={selectedCourse}
+              onChange={(e) => setSelectedCourse(e.target.value)}
+              disabled={syncingTarget !== null}
+              className="w-full rounded-lg bg-slate-950/80 border border-slate-800 px-2.5 py-2 text-[11px] text-slate-300 outline-none focus:border-cyan-500/50 truncate"
+            >
+              {theoryCourses.map((c) => (
+                <option
+                  key={c.course_code}
+                  value={c.course_code}
+                  className="bg-slate-900"
+                >
+                  {c.course_code} - {c.title}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={() => handleCacheSync("drive")}
+              disabled={syncingTarget !== null}
+              className="cursor-pointer w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all bg-slate-950/80 border border-slate-800 text-purple-400 hover:bg-purple-950/40 hover:border-purple-500/40 disabled:opacity-50"
+            >
+              <span>Sync Drive</span>
+              <RefreshCw
+                size={13}
+                className={
+                  syncingTarget === "drive"
+                    ? "animate-spin shrink-0"
+                    : "shrink-0"
+                }
+              />
+            </button>
+          </div>
+
+          {syncMessage && (
+            <div
+              className={`px-2.5 py-1.5 rounded-lg border text-[10px] tracking-wide ${
+                syncMessage.type === "ok"
+                  ? "bg-green-950/30 border-green-500/30 text-green-400"
+                  : "bg-red-950/30 border-red-500/30 text-red-400"
+              }`}
+            >
+              {syncMessage.text}
+            </div>
+          )}
+        </div>
+
+        <div className="p-2 md:p-4 md:mt-auto border-t border-slate-800/80">
+          <button
+            type="button"
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="cursor-pointer flex items-center gap-2 md:gap-3 px-3 md:px-4 py-3 md:mt-auto rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap text-red-500 hover:bg-red-950/40 border border-transparent hover:border-red-500/30 hover:text-red-400"
+            className="cursor-pointer w-full flex items-center gap-2 md:gap-3 px-3 md:px-4 py-3 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap text-red-500 hover:bg-red-950/40 border border-transparent hover:border-red-500/30 hover:text-red-400"
           >
             <LogOut size={14} className="shrink-0" />
             Logout()
           </button>
-        </nav>
+        </div>
       </aside>
 
       <main className="flex-1 p-4 md:p-8 overflow-y-auto relative z-10">
